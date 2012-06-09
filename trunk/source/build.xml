@@ -1,0 +1,74 @@
+<project name="TelephoneAnalyzer" default="dist" basedir=".">
+
+	<property name="dist" value="TelephoneAnalyzer"/>
+	<property file="build.properties"/>
+	
+	<path id="classpath">
+	    <fileset dir="${DERBY_HOME}" includes="*.jar" />
+		<fileset dir="."/>
+	</path>
+	
+	<target name="increment">
+		<propertyfile file="build.properties">
+			<entry key="build.number.third.number" type="int" operation="+" default="0"/>
+		</propertyfile>
+	</target>
+	
+	<target name="dist" depends="compile,increment">
+		<mkdir dir="${dist}/lib"/>
+		<mkdir dir="${dist}/logs"/>
+		
+		<copy todir="${dist}/lib">
+			<fileset dir=".">
+	    		<include name="*.jar"/>
+			</fileset>
+		</copy>
+		
+		<copy todir="${dist}/bin">
+			<fileset dir="bin">
+			</fileset>
+		</copy>
+		
+		<mkdir dir="${dist}/${derby.schema}"/>
+		<copy todir="${dist}/${derby.schema}">
+			<fileset dir="${derby.schema}"/>
+		</copy>
+		
+		<copy todir="${dist}" file="run.bat"/>		
+		<copy todir="${dist}" file="readme.txt"/>
+		<copy todir="${dist}" file="log4j.properties"/>
+		
+		<echo file="${dist}/version.txt">version=${build.number.first.number}.${build.number.second.number}.${build.number.third.number}</echo>
+		
+		 <zip destfile="DISTRIBUTIVE" basedir="${dist}" update="true"/>
+		
+		<mail mailhost="smtp.gmail.com" mailport="465" subject="Build" ssl="true"
+		      user="starreider15@gmail.com"
+		      password="PAWvJjsoqJ">
+		  <from address="starreider15@gmail.com"/>
+		  <to address="am.moshkov@gmail.com"/>
+		  <message>The build version=${build.number.first.number}.${build.number.second.number}.${build.number.third.number} has completed</message>
+		  <attachments>
+		    <fileset dir=".">
+		      <include name="DISTRIBUTIVE"/>
+		    </fileset>
+		  </attachments>
+		</mail>
+	</target>
+	
+	<target name="compile" depends="clean">
+		
+		<mkdir dir="${dist}"/>
+		<mkdir dir="${dist}/bin"/>
+		
+	    <javac srcdir="src" destdir="${dist}/bin" debug="true" deprecation="on">
+	        <classpath refid="classpath" />
+	    </javac>
+	</target>
+	
+    <target name="clean">
+        <delete dir="${dist}"/>
+    	<delete file="DISTRIBUTIVE"/>
+    </target>
+
+</project>

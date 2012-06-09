@@ -1,0 +1,1 @@
+java -cp  ".;./bin;./lib/*;C:/Program Files/Java/jdk1.7.0_04/db/lib/derby.jar" org.robe.ta.TelephoneAnalyzer 1>>logs/console.log 2>&1
