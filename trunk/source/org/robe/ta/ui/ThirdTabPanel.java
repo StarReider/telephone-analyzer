@@ -1,11 +1,13 @@
-package org.robe.ta;
+package org.robe.ta.ui;
 
 import java.awt.BorderLayout;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -13,40 +15,34 @@ import javax.swing.JScrollPane;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableModel;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.robe.ta.Telephone;
+import org.robe.ta.data.DataFacade;
 
-@SuppressWarnings("serial")
 public class ThirdTabPanel extends JPanel 
 {
-    private static final Log log;
+    private final Log log;
     
-	private MyTableModel model;
-	private SQLHelper sqlHelper;
-    
-    private ArrayList<String[]> MyArray;
+	private BeanTableModel model;
+	private DataFacade dataFacade;
    
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable DataBaseTable;
     private javax.swing.JButton DoQuery;
-    
-    static
-    {
-    	 log = LogFactory.getLog("org.robe.ta.ThirdTabPanel"); 
-    }
 
-	public ThirdTabPanel(SQLHelper sqlHelper) 
+	public ThirdTabPanel(DataFacade dataFacade) 
 	{
-		this.sqlHelper = sqlHelper;
-		MyArray = new ArrayList<String[]>();
+		log = LogFactory.getLog(ThirdTabPanel.class); 
+		this.dataFacade = dataFacade;
 		
         initComponents();
         
         DataBaseTable.setVisible(false);
         setSize(500,420);
     }
-
 
     private void initComponents() 
     {
@@ -57,7 +53,6 @@ public class ThirdTabPanel extends JPanel
         but.setActionCommand("add");
         
         setLayout(new BorderLayout());
-        //setLayout(new GridLayout(0, 2));
         
         but.addActionListener(new ActionListener() 
         {	
@@ -66,7 +61,7 @@ public class ThirdTabPanel extends JPanel
 			{
 				if(e.getSource() == but)
 				{
-					model.insertRow(new String[sqlHelper.getNumberOfColumns()]);
+					model.insertRow(new String[4]);
 					QueryTable(e);
 				}
 			}
@@ -120,11 +115,10 @@ public class ThirdTabPanel extends JPanel
     private void QueryTable(java.awt.event.ActionEvent evt) 
     {
         try 
-        {            
-        	MyArray.clear();
-            sqlHelper.fillArray(MyArray);
+        {
+        	List<Telephone> beans = dataFacade.getAllTelephones();
 
-            model = new MyTableModel(); 
+            model = new BeanTableModel(beans);
             model.addTableModelListener(new TableModelListener() 
             {				
 				@Override
@@ -136,10 +130,10 @@ public class ThirdTabPanel extends JPanel
 						int id = Integer.parseInt((String) DataBaseTable.getValueAt(row, 0));
 						String name = DataBaseTable.getValueAt(row, 1) != null ? (String)DataBaseTable.getValueAt(row, 1) : null;
 						String description = DataBaseTable.getValueAt(row, 2) != null ? (String)DataBaseTable.getValueAt(row, 2) : null;
-						BigInteger telephone = DataBaseTable.getValueAt(row, 3) != null ? new BigInteger((String)DataBaseTable.getValueAt(row, 3)) : null;
+						BigInteger telephoneNumber = DataBaseTable.getValueAt(row, 3) != null ? new BigInteger((String)DataBaseTable.getValueAt(row, 3)) : null;
 					try 
 					{ 
-						sqlHelper.updateTelephone(id, telephone, name, description);
+						dataFacade.updateTelephone(id, telephone, name, description);
 					   
 					} 
 					catch (Exception ex) 
@@ -151,7 +145,7 @@ public class ThirdTabPanel extends JPanel
 					{					   
 						try 
 						{ 
-							sqlHelper.insertEmptyRow();
+							dataFacade.insertEmptyRow();
 						   
 						} 
 						catch (Exception ex) 
@@ -168,56 +162,6 @@ public class ThirdTabPanel extends JPanel
         catch(Exception e) 
         {
         	log.error(e);
-        }
-    }
-
-    class MyTableModel extends AbstractTableModel 
-    {
-        public int getColumnCount() 
-        {
-            return sqlHelper.getNumberOfColumns();
-        }
-        
-        public int getRowCount() 
-        {
-            return MyArray.size();
-        }
-        
-        public String getColumnName(int i) 
-        {
-            return sqlHelper.getTableName(i);
-        }
-        
-        public java.lang.Object getValueAt(int row, int column) 
-        {
-        	String[] data = MyArray.get(row);
-        	return data[column];
-        }
-        
-        public Class<? extends Object> getColumnClass(int c) 
-        {
-            return getValueAt(0, c).getClass();
-        }
-        
-        public boolean isCellEditable(int row, int col) 
-        {
-        	if(col > 0)
-                return true;
-        	else
-        		return false;
-        }
-        
-        public void setValueAt(Object value, int row, int col) 
-        {
-        	String[] data = MyArray.get(row);
-        	data[col] = (String) value;
-            fireTableCellUpdated(row, col);
-        }
-        
-        public void insertRow(String[] value) 
-        {
-        	MyArray.add(value);
-        	fireTableRowsInserted(MyArray.size(), MyArray.size());
         }
     }
 }

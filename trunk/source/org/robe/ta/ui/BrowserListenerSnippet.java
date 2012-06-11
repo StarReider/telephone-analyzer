@@ -5,7 +5,7 @@
  * Site: atomation.ru
  * Mail: Sashusik_EntXXI@Mail.ru
  */
-package org.robe.ta;
+package org.robe.ta.ui;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
