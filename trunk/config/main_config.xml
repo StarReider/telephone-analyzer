@@ -2,7 +2,6 @@
 
 <configuration>
 	<system/>
-	<properties fileName="config/version.txt"/>
-	<xml fileName="config/config.xml"/>
-	<xml fileName="META-INF/persistance.xml"/>
+	<properties fileName="version.txt"/>
+	<xml fileName="config.xml"/>
 </configuration>
