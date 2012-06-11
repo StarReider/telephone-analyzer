@@ -5,7 +5,7 @@ package org.robe.ta.data;
 
 import java.util.List;
 
-import org.robe.ta.Telephone;
+import org.robe.ta.data.jpa.Telephone;
 
 
 public interface DataFacade 

@@ -5,7 +5,7 @@ import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
 
-import org.robe.ta.Telephone;
+import org.robe.ta.data.jpa.Telephone;
 
 public class BeanTableModel extends AbstractTableModel 
     {

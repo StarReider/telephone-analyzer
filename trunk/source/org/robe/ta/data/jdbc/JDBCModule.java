@@ -12,8 +12,8 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.robe.ta.Telephone;
 import org.robe.ta.data.DataFacade;
+import org.robe.ta.data.jpa.Telephone;
 
 public class JDBCModule implements DataFacade
 {
