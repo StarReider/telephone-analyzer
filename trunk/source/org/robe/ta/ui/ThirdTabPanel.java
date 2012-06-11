@@ -3,19 +3,13 @@ package org.robe.ta.ui;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
-import javax.swing.table.AbstractTableModel;
-import javax.swing.table.TableModel;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -61,7 +55,8 @@ public class ThirdTabPanel extends JPanel
 			{
 				if(e.getSource() == but)
 				{
-					model.insertRow(new String[4]);
+					model.insertRow(new Telephone());
+					//refill table of beans
 					QueryTable(e);
 				}
 			}
@@ -116,7 +111,7 @@ public class ThirdTabPanel extends JPanel
     {
         try 
         {
-        	List<Telephone> beans = dataFacade.getAllTelephones();
+        	List<Telephone> beans = (List<Telephone>) dataFacade.getAllBeans();
 
             model = new BeanTableModel(beans);
             model.addTableModelListener(new TableModelListener() 
@@ -126,27 +121,31 @@ public class ThirdTabPanel extends JPanel
 				{					
 					if (e.getType() == TableModelEvent.UPDATE)  
 					{  
-						int row=DataBaseTable.getSelectedRow();  
-						int id = Integer.parseInt((String) DataBaseTable.getValueAt(row, 0));
-						String name = DataBaseTable.getValueAt(row, 1) != null ? (String)DataBaseTable.getValueAt(row, 1) : null;
-						String description = DataBaseTable.getValueAt(row, 2) != null ? (String)DataBaseTable.getValueAt(row, 2) : null;
-						BigInteger telephoneNumber = DataBaseTable.getValueAt(row, 3) != null ? new BigInteger((String)DataBaseTable.getValueAt(row, 3)) : null;
-					try 
-					{ 
-						dataFacade.updateTelephone(id, telephone, name, description);
-					   
+						int row = DataBaseTable.getSelectedRow();
+						BeanTableModel tableModel = (BeanTableModel) DataBaseTable.getModel();
+						Telephone telephone = tableModel.getBeans().get(row);
+						
+//						int id = Integer.parseInt((String) DataBaseTable.getValueAt(row, 0));
+//						String name = DataBaseTable.getValueAt(row, 1) != null ? (String)DataBaseTable.getValueAt(row, 1) : null;
+//						String description = DataBaseTable.getValueAt(row, 2) != null ? (String)DataBaseTable.getValueAt(row, 2) : null;
+//						BigInteger telephoneNumber = DataBaseTable.getValueAt(row, 3) != null ? new BigInteger((String)DataBaseTable.getValueAt(row, 3)) : null;
+						try 
+						{ 
+							dataFacade.updateBean(telephone);
+						} 
+						catch (Exception ex) 
+						{  
+							log.error(ex);
+						}  
 					} 
-					catch (Exception ex) 
-					{  
-					        	log.error(ex);
-					 }  
-				} 
-				else if(e.getType() == TableModelEvent.INSERT)
+					else if(e.getType() == TableModelEvent.INSERT)
 					{					   
 						try 
 						{ 
-							dataFacade.insertEmptyRow();
-						   
+							BeanTableModel tableModel = (BeanTableModel) DataBaseTable.getModel();
+							List<Telephone> beans = tableModel.getBeans();
+							Telephone telephone = beans.get(beans.size() - 1);
+							dataFacade.createEmptyBean(telephone);
 						} 
 						catch (Exception ex) 
 						{  
@@ -154,7 +153,7 @@ public class ThirdTabPanel extends JPanel
 						} 
 					}
 				}
-			});
+            });
 			
             DataBaseTable.setModel(model);
             DataBaseTable.setVisible(true);

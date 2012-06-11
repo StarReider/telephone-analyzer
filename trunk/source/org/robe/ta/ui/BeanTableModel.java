@@ -10,6 +10,11 @@ import org.robe.ta.Telephone;
 public class BeanTableModel extends AbstractTableModel 
     {
     	private List<Telephone> beans;
+    	
+    	public List<Telephone> getBeans() 
+    	{
+			return beans;
+		}
 
     	public BeanTableModel(List<Telephone> beans)
     	{

@@ -3,7 +3,6 @@
  */
 package org.robe.ta.data;
 
-import java.math.BigInteger;
 import java.util.List;
 
 import org.robe.ta.Telephone;
@@ -15,11 +14,9 @@ public interface DataFacade
 	
 	void close() throws Exception;
 	
-	int updateTelephone(int id, BigInteger telephone, String name, String description) throws Exception;
+	void updateBean(Telephone telephone) throws Exception;
 	
-	void insertEmptyRow() throws Exception;
+	void createEmptyBean(Telephone telephone) throws Exception;
 	
-	List<Telephone> getAllTelephones() throws Exception;
-	
-	Telephone getTelephone(int id);
+	List<Telephone> getAllBeans() throws Exception;
 }

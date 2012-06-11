@@ -67,6 +67,6 @@ public class Telephone implements Serializable
 	@Override
 	public String toString() 
 	{
-		return "Telephone (id=" + id + ",name=" + name + ",description=" + description + "telephone=" + telephone + ")";
+		return "Telephone (id=" + id + ",name=" + name + ",description=" + description + ",telephone=" + telephone + ")";
 	}
 }

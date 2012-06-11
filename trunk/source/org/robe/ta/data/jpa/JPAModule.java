@@ -5,8 +5,11 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
+import javax.persistence.Query;
 
+import org.robe.ta.Telephone;
 import org.robe.ta.data.DataFacade;
 
 public class JPAModule implements DataFacade
@@ -23,32 +26,43 @@ public class JPAModule implements DataFacade
 	@Override
 	public boolean isTelephoneExist(String tel) throws Exception 
 	{
-		return false;
+		Query query = em.createQuery("SELECT e FROM Telephone e WHERE e.telephone = " + new BigInteger(tel));
+	    List<Telephone> beans = query.getResultList();
+	    if(beans.size() > 0)
+	    	return true;
+	    else
+	    	return false;
 	}
 
 	@Override
 	public void close() throws Exception 
 	{
-		
+		em.close();
+		emf.close();
 	}
 
 	@Override
-	public int updateTelephone(int id, BigInteger telephone, String name,
-			String description) throws Exception {
-		// TODO Auto-generated method stub
-		return 0;
+	public void updateBean(Telephone telephone) throws Exception 
+	{
+		EntityTransaction transaction = em.getTransaction();
+		transaction.begin();
+		em.persist(telephone);
+		transaction.commit();
 	}
 
 	@Override
-	public void insertEmptyRow() throws Exception {
-		// TODO Auto-generated method stub
-		
+	public void createEmptyBean(Telephone telephone) throws Exception 
+	{
+		EntityTransaction transaction = em.getTransaction();
+		transaction.begin();
+		em.persist(telephone);
+		transaction.commit();
 	}
 
 	@Override
-	public void fillArray(List<String[]> list) throws Exception {
-		// TODO Auto-generated method stub
-		
+	public List<Telephone> getAllBeans() throws Exception 
+	{
+		Query query = em.createQuery("SELECT e FROM Telephone e");
+	    return query.getResultList();
 	}
-
 }

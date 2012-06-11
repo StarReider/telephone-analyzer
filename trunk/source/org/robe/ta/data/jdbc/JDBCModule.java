@@ -1,13 +1,13 @@
 package org.robe.ta.data.jdbc;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
@@ -27,7 +27,6 @@ public class JDBCModule implements DataFacade
 
 	private Connection conn;
 	private PreparedStatement existsPS;
-	private int numberOfColumns;
 	
 	static
 	{
@@ -68,30 +67,28 @@ public class JDBCModule implements DataFacade
 		}  
 	}
 	
-	public int updateTelephone(int id, BigInteger telephone, String name, String description) throws Exception
+	public void updateBean(Telephone telephone) throws Exception
 	{
         PreparedStatement ps = conn.prepareStatement("UPDATE " 
         		+ TABLE_NAME 
         		+ " SET " 
         		+ TEL_COL_NAME 
-        		+ " = ?, " + NAME_COL_NAME 
-        		+ " = ?, " + DESCRIPTION_COL_NAME 
+        		+ " = ?, " 
+        		+ NAME_COL_NAME 
+        		+ " = ?, " 
+        		+ DESCRIPTION_COL_NAME 
         		+ " = ? WHERE id = " 
-        		+ id);  
-	    int count;
-        
-        ps.setBigDecimal(1, telephone != null ? new BigDecimal(telephone) : null);  
-        ps.setString(2, name);   
-        ps.setString(3, description);  
+        		+ telephone.getId());  
 
-        count = ps.executeUpdate();   
+        ps.setBigDecimal(1, new BigDecimal(telephone.getTelephone())); 
+        ps.setString(2, telephone.getName());   
+        ps.setString(3, telephone.getDescription());  
+ 
         ps.close();
-        
-        return count;
 	}
 	
 	@Override
-	public void insertEmptyRow() throws Exception
+	public void createEmptyBean(Telephone telephone) throws Exception
 	{
 		Statement st = conn.createStatement();
 		st.execute("INSERT INTO telephones(telephone, name, description) VALUES(null, null, null)");   
@@ -120,19 +117,26 @@ public class JDBCModule implements DataFacade
 	}
 
 	@Override
-	public List<Telephone> getAllTelephones() throws Exception 
+	public List<Telephone> getAllBeans() throws Exception 
 	{
 		Statement stmt = conn.createStatement();
         ResultSet res = stmt.executeQuery("SELECT * FROM " + TABLE_NAME);  
+        List<Telephone> beans = new ArrayList<Telephone>();
         
         while(res.next()) 
         {
-        	String[] rowData = new String[numberOfColumns];
-        	for(int C=1; C<=numberOfColumns;C++)
-            {
-        		rowData[C-1] = res.getString(C);
-        	}
-            list.add(rowData);
+        	BigDecimal telephoneNumber = res.getBigDecimal(TEL_COL_NAME);
+        	String name = res.getString(NAME_COL_NAME);
+        	String descriptiopn = res.getString(DESCRIPTION_COL_NAME);
+        	
+        	Telephone telephone = new Telephone();
+        	telephone.setName(name);
+        	telephone.setDescription(descriptiopn);
+        	telephone.setTelephone(telephoneNumber.toBigInteger());
+            
+        	beans.add(telephone);
         }
+        
+        return beans;
 	}
 }
