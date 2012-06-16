@@ -128,11 +128,13 @@ public class JDBCModule implements DataFacade
         	BigDecimal telephoneNumber = res.getBigDecimal(TEL_COL_NAME);
         	String name = res.getString(NAME_COL_NAME);
         	String descriptiopn = res.getString(DESCRIPTION_COL_NAME);
+        	int id = res.getInt("id");
         	
         	Telephone telephone = new Telephone();
         	telephone.setName(name);
         	telephone.setDescription(descriptiopn);
-        	telephone.setTelephone(telephoneNumber.toBigInteger());
+        	telephone.setTelephone(telephoneNumber != null ? telephoneNumber.toBigInteger() : null);
+        	telephone.setId(id);
             
         	beans.add(telephone);
         }

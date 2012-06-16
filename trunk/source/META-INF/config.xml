@@ -2,7 +2,7 @@
 
 <configuration>
   <db>
-	<path></path>
+	<path>D:\Dropbox\anton\exampledb</path>
 	<server></server>
 	<port></port>
   </db>

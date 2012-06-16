@@ -32,18 +32,18 @@ public class ConfigurationReader
 	{
 		log = LogFactory.getLog(ConfigurationReader.class); 
 		
-		File configFile = new File("config/" + CONFIG_FILE_NAME);
+		File configFile = new File("bin/META-INF/" + CONFIG_FILE_NAME);
 		if(!configFile.exists())
-			throw new RuntimeException("Unable to find " + "config/" + CONFIG_FILE_NAME + " file.");
+			throw new RuntimeException("Unable to find " + "bin/META-INF/" + CONFIG_FILE_NAME + " file.");
 		
-		File versionFile = new File("config/version.txt");
+		File versionFile = new File("bin/META-INF/version.txt");
 		if(!versionFile.exists())
 			throw new RuntimeException("Unable to find " + VERSION_FILE_NAME + " file.");
 		
 		versionFile.setReadOnly();
 		
 		DefaultConfigurationBuilder builder = new DefaultConfigurationBuilder();
-		builder.setFile(new File(CONFIG_FILE_NAME));
+		builder.setFile(new File("bin/META-INF/" + CONFIG_FILE_NAME));
 		Configuration conf = builder.getConfiguration(true);
 		
 		path = conf.getString(PATH_TAG);
@@ -73,7 +73,7 @@ public class ConfigurationReader
 		
 		if(mode == RunMode.ClientServer)
 		{
-			XMLConfiguration configuration = new XMLConfiguration(new File("bin/META-INF/persistence.xml"));
+			XMLConfiguration configuration = new XMLConfiguration(new File("bin/bin/META-INF/persistence.xml"));
 			configuration.setExpressionEngine(new XPathExpressionEngine());
 			configuration.clearProperty("persistence-unit/properties/property[@name='javax.persistence.jdbc.url']/@value");
 			configuration.addProperty("persistence-unit/properties/property[@name='javax.persistence.jdbc.url']/@value", getJDBCURL());
@@ -86,13 +86,13 @@ public class ConfigurationReader
 	private void verifyInput() 
 	{
 		if(StringUtils.isEmpty(path))
-			throw new RuntimeException("Path to bd must be filled. See config/main_config file.");
+			throw new RuntimeException("Path to bd must be filled. See bin/META-INF/main_config file.");
 		
 		if(StringUtils.isEmpty(version))
 			throw new RuntimeException("Install is not correct.");
 		
 		if((StringUtils.isEmpty(server) && port != null) || (port == null && !StringUtils.isEmpty(server)))
-			throw new RuntimeException("Port/server must be filled. See config/main_config file.");
+			throw new RuntimeException("Port/server must be filled. See bin/META-INF/main_config file.");
 	}
 
 	private RunMode whatRumMode() 
