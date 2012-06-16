@@ -6,7 +6,7 @@ import javax.swing.SwingUtilities;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.robe.ta.conf.ConfigurationReader;
-import org.robe.ta.data.DataFacade;
+import org.robe.ta.data.DataProvider;
 import org.robe.ta.data.DataFactory;
 import org.robe.ta.ui.MainFrame;
 
@@ -38,7 +38,7 @@ public class TelephoneAnalyzer
     	
     	log.info("Initialize db subsystem starting...");    	    	
     	DataFactory dataFactory = DataFactory.getInstance();
-    	DataFacade dataFacade = dataFactory.getDataFacade(configurationReader.getMode(), configurationReader.getJDBCURL());
+    	DataProvider dataFacade = dataFactory.getDataFacade(configurationReader.getMode(), configurationReader.getJDBCURL());
     	log.info("Initialize db subsystem done");    	
     	
     	log.info("Initialize GUI subsystem starting...");
@@ -46,7 +46,7 @@ public class TelephoneAnalyzer
     	log.info("Initialize GUI subsystem done");
 	}
 	
-	private void createGUI(final DataFacade dataFacade, final String version) 
+	private void createGUI(final DataProvider dataFacade, final String version) 
 	{
 		SwingUtilities.invokeLater(new Runnable() 
 		{

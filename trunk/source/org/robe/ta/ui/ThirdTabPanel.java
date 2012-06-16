@@ -13,7 +13,7 @@ import javax.swing.event.TableModelListener;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.robe.ta.data.DataFacade;
+import org.robe.ta.data.DataProvider;
 import org.robe.ta.data.jpa.Telephone;
 
 public class ThirdTabPanel extends JPanel 
@@ -21,13 +21,13 @@ public class ThirdTabPanel extends JPanel
     private final Log log;
     
 	private BeanTableModel model;
-	private DataFacade dataFacade;
+	private DataProvider dataFacade;
    
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable DataBaseTable;
     private javax.swing.JButton DoQuery;
 
-	public ThirdTabPanel(DataFacade dataFacade) 
+	public ThirdTabPanel(DataProvider dataFacade) 
 	{
 		log = LogFactory.getLog(ThirdTabPanel.class); 
 		this.dataFacade = dataFacade;

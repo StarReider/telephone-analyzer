@@ -40,7 +40,7 @@ import org.mozilla.interfaces.nsIDOMDocument;
 import org.mozilla.interfaces.nsIDOMElement;
 import org.mozilla.interfaces.nsIDOMNode;
 import org.mozilla.interfaces.nsIDOMNodeList;
-import org.robe.ta.data.DataFacade;
+import org.robe.ta.data.DataProvider;
 
 import ru.atomation.jbrowser.impl.JBrowserBuilder;
 import ru.atomation.jbrowser.impl.JBrowserCanvas;
@@ -51,9 +51,9 @@ import ru.atomation.jbrowser.interfaces.BrowserAdapter;
 public class MainFrame 
 {
     private final Log log; 
-    private final DataFacade dataFacade;
+    private final DataProvider dataFacade;
 
-    public MainFrame(final DataFacade dataFacade, String version) throws Exception
+    public MainFrame(final DataProvider dataFacade, String version) throws Exception
     {
     	log = LogFactory.getLog(MainFrame.class); 
     	this.dataFacade = dataFacade;
@@ -158,10 +158,10 @@ public class MainFrame
 	protected static class TabbedComponentFactory extends JComponentFactory<Canvas>
 	{
 		protected final JTabbedPane tabContainer;
-		private DataFacade dataFacade;
+		private DataProvider dataFacade;
 		private final Log log = LogFactory.getLog(TabbedComponentFactory.class);
 
-		public TabbedComponentFactory(JTabbedPane tabContainer, DataFacade dataFacade) 
+		public TabbedComponentFactory(JTabbedPane tabContainer, DataProvider dataFacade) 
 		{
 			super(JBrowserCanvas.class);
 			this.tabContainer = tabContainer;

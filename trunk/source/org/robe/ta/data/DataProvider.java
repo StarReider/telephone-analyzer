@@ -8,7 +8,7 @@ import java.util.List;
 import org.robe.ta.data.jpa.Telephone;
 
 
-public interface DataFacade 
+public interface DataProvider 
 {
 	boolean isTelephoneExist(String tel)  throws Exception;
 	

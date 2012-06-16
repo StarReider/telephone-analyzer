@@ -12,10 +12,10 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.robe.ta.data.DataFacade;
+import org.robe.ta.data.DataProvider;
 import org.robe.ta.data.jpa.Telephone;
 
-public class JDBCModule implements DataFacade
+public class JDBCModule implements DataProvider
 {
 	private static final String DB_DRIVER_NAME = "org.apache.derby.jdbc.EmbeddedDriver";
 	private static final Log Log;
@@ -49,6 +49,7 @@ public class JDBCModule implements DataFacade
 		try 
 		{
 			conn = DriverManager.getConnection(jdbcURL);
+			conn.setAutoCommit(true);
 		} 
 		catch (Exception e) 
 		{
@@ -80,10 +81,11 @@ public class JDBCModule implements DataFacade
         		+ " = ? WHERE id = " 
         		+ telephone.getId());  
 
-        ps.setBigDecimal(1, new BigDecimal(telephone.getTelephone())); 
+        ps.setBigDecimal(1, telephone.getTelephone() != null ? new BigDecimal(telephone.getTelephone()) : null); 
         ps.setString(2, telephone.getName());   
         ps.setString(3, telephone.getDescription());  
  
+        ps.execute();
         ps.close();
 	}
 	

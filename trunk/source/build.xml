@@ -4,7 +4,7 @@
 	<property file="source/build.properties"/>
 	
 	<path id="classpath">
-	    <fileset dir="${DERBY_HOME}" includes="*.jar" />
+	    <fileset dir="${DERBY_HOME}" includes="*.jar"/>
 		<fileset dir="${REPO_HOME}" includes="*.jar"/>
 	</path>
 	

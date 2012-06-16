@@ -9,9 +9,9 @@ import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
 
-import org.robe.ta.data.DataFacade;
+import org.robe.ta.data.DataProvider;
 
-public class JPAModule implements DataFacade
+public class JPAModule implements DataProvider
 {
 	private EntityManager em;
 	private EntityManagerFactory emf;

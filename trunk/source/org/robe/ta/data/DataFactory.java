@@ -21,7 +21,7 @@ public class DataFactory
 		return instance;
 	}
 	
-	public DataFacade getDataFacade(RunMode runMode, String jdbcURL) throws Exception
+	public DataProvider getDataFacade(RunMode runMode, String jdbcURL) throws Exception
 	{
 		if(runMode == RunMode.StandAlone)
 		{

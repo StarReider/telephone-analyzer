@@ -73,7 +73,7 @@ public class ConfigurationReader
 		
 		if(mode == RunMode.ClientServer)
 		{
-			XMLConfiguration configuration = new XMLConfiguration(new File("bin/bin/META-INF/persistence.xml"));
+			XMLConfiguration configuration = new XMLConfiguration(new File("bin/META-INF/persistence.xml"));
 			configuration.setExpressionEngine(new XPathExpressionEngine());
 			configuration.clearProperty("persistence-unit/properties/property[@name='javax.persistence.jdbc.url']/@value");
 			configuration.addProperty("persistence-unit/properties/property[@name='javax.persistence.jdbc.url']/@value", getJDBCURL());

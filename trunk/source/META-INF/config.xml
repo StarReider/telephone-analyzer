@@ -2,8 +2,8 @@
 
 <configuration>
   <db>
-	<path>D:\Dropbox\anton\exampledb</path>
-	<server></server>
-	<port></port>
+	<path>E:\Dropbox\anton\exampledb</path>
+	<server>localhost</server>
+	<port>1527</port>
   </db>
 </configuration>
