@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -31,7 +32,13 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.border.EmptyBorder;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultHighlighter;
+import javax.swing.text.DefaultStyledDocument;
 import javax.swing.text.Highlighter;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.Style;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyleContext;
+import javax.swing.text.StyledDocument;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -88,13 +95,12 @@ public class MainFrame
 		tabContainer.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 		JComponentFactory<Canvas> canvasFactory = new TabbedComponentFactory(tabContainer, dataFacade);
 
-		new JBrowserBuilder().setBrowserFactory(canvasFactory)
-				.buildBrowserManager();
+		new JBrowserBuilder().setBrowserFactory(canvasFactory)./*setXulRunnerPath(new File("C:/Program Files/Mozilla XULRunner/1.9.2")).*/buildBrowserManager();
 
 		frame.getContentPane().add(tabContainer, BorderLayout.CENTER);
 		frame.setVisible(true);
 
-		JBrowserComponent<?> browser = canvasFactory.createBrowser();
+		JBrowserComponent<?> browser = canvasFactory.createBrowser(); 
 		//browser.setUrl("http://viaduk-podolsk.ru/auto_sell");
 		
 		tabContainer.addTab("Second Tab", makeSecondTab());
@@ -208,7 +214,7 @@ public class MainFrame
 				{
 					if(text == null || node.getNodeType() != nsIDOMNode.TEXT_NODE)
 						return;
-					String patternString = "((8|\\+[0-9]{1,4})?[\\-\\(]?[0-9]{3,6}[\\-\\)]?[0-9\\-]{5,})";
+					String patternString = "((8|\\+[0-9]{1,4})?[\\-\\(]?[0-9]{3,6}[\\-\\)]\\s?[0-9\\-]{5,})";
 					
 					
 					Pattern pattern;
@@ -456,14 +462,16 @@ public class MainFrame
 	private JComponent makeSecondTab() throws Exception 
 	{
         JPanel panel = new JPanel(false);
-        
         final JTextPane textArea = new JTextPane();
+        textArea.setContentType("text/html");
+        
+  
         final JScrollPane scrollPane = new JScrollPane(textArea);
         
-        final DefaultHighlighter.DefaultHighlightPainter highlightPainterGreen = 
-                new DefaultHighlighter.DefaultHighlightPainter(Color.GREEN);
-        final DefaultHighlighter.DefaultHighlightPainter highlightPainterRed = 
-                new DefaultHighlighter.DefaultHighlightPainter(Color.RED);        
+//        final DefaultHighlighter.DefaultHighlightPainter highlightPainterGreen = 
+//                new DefaultHighlighter.DefaultHighlightPainter(Color.GREEN);
+//        final DefaultHighlighter.DefaultHighlightPainter highlightPainterRed = 
+//                new DefaultHighlighter.DefaultHighlightPainter(Color.RED);        
                 
         JButton button = new JButton("Search");
         button.setActionCommand("search");
@@ -488,7 +496,7 @@ public class MainFrame
         panel.setLayout(new BorderLayout());
         JPanel panel2 = new JPanel();
         JPanel panel3 = new JPanel();
-        final JTextField patternField = new JTextField("((8|\\+[0-9]{1,4})?[\\-\\(]?[0-9]{3,6}[\\-\\)]?[0-9\\-]{5,})");
+        final JTextField patternField = new JTextField("((8|\\+[0-9]{1,4})?[\\-\\(]?[0-9]{3,6}[\\-\\)]\\s?[0-9\\-]{5,})");
         JLabel label = new JLabel("Pattern ");
         
         panel3.add(button);
@@ -507,16 +515,17 @@ public class MainFrame
 			@Override
 			public void actionPerformed(ActionEvent arg0) 
 			{
-				int textLength = textArea.getDocument().getLength();
 				String text;
-				try 
-				{
-					text = textArea.getDocument().getText(0, textLength);
-				} 
-				catch (BadLocationException e1) 
-				{
-					return;
-				}//textArea.getText();
+//				int textLength = textArea.getDocument().getLength();
+//				try 
+//				{
+//					text = textArea.getDocument().getText(0, textLength);
+//				} 
+//				catch (BadLocationException e1) 
+//				{
+//					return;
+//				}
+				text = textArea.getText();
 				String patternString = patternField.getText();
 				
 				log.info("pattern " + patternString);
@@ -535,13 +544,13 @@ public class MainFrame
 				String group = null;
 				int start, end;
 				
-				Highlighter hilite = textArea.getHighlighter();
-			    Highlighter.Highlight[] hilites = hilite.getHighlights();
+//				Highlighter hilite = textArea.getHighlighter();
+//			    Highlighter.Highlight[] hilites = hilite.getHighlights();
 
-			    for (int i = 0; i < hilites.length; i++) 
-			    {
-			        hilite.removeHighlight(hilites[i]);
-			    }
+//			    for (int i = 0; i < hilites.length; i++) 
+//			    {
+//			        hilite.removeHighlight(hilites[i]);
+//			    }
   
 				while (matcher.find()) 
 	            {
@@ -574,10 +583,10 @@ public class MainFrame
 	            	{
 	            		try 
 	            		{
-							textArea.getHighlighter().addHighlight(start, end, 
-									highlightPainterGreen);
+							//textArea.getHighlighter().addHighlight(start, end, highlightPainterGreen);
+	            			text = text.replace(group, "<span style='color:green'>" + group + "</span>");
 						} 
-	            		catch (BadLocationException e) 
+	            		catch (Exception e) 
 	            		{
 	            			log.warn(e);
 						}
@@ -588,16 +597,17 @@ public class MainFrame
 	            	{
 	            		try 
 	            		{
-							textArea.getHighlighter().addHighlight(start, end, 
-									highlightPainterRed);
+							//textArea.getHighlighter().addHighlight(start, end, highlightPainterRed);
+	            			text = text.replace(group, "<span style='color:red'>" + group + "</span>");
 						} 
-	            		catch (BadLocationException e) 
+	            		catch (Exception e) 
 	            		{
 	            			log.warn(e);
 						}
 	            		log.info(group + " wasn't finded");
 	            	}
 	            }
+            	textArea.setText(text);
 			}
 		});
 

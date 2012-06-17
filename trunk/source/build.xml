@@ -26,11 +26,6 @@
     		    <include name="*.jar"/>
     		</fileset>
     	</copy>
-    			
-    	<mkdir dir="${dist}/config"/>
-    	<copy todir="${dist}/config">
-    		<fileset dir="config"/>
-    	</copy>
     	
     	<mkdir dir="${dist}/documents"/>
     	    	<copy todir="${dist}/documents">
@@ -102,6 +97,8 @@
 		
 		<mkdir dir="${dist}"/>
 		<mkdir dir="${dist}/bin" />
+		
+		<echo>${dist}</echo>
 		
 	    <javac srcdir="source" destdir="${dist}/bin" debug="true" deprecation="on">
 	        <classpath refid="classpath" />
