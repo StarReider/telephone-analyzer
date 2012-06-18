@@ -2,12 +2,17 @@
 
 	<property name="dist" value="TelephoneAnalyzer"/>
 	<property file="source/build.properties"/>
+	<property file="source/mail.properties"/>
 	
 	<path id="classpath">
 	    <fileset dir="${DERBY_HOME}" includes="*.jar"/>
 		<fileset dir="${REPO_HOME}" includes="*.jar"/>
 	</path>
 	
+	<!-- ================================= 
+	          target: increment 
+	          Increment build version            
+	         ================================= -->
 	<target name="increment">
 		<propertyfile file="build.properties">
 			<entry key="build.number.third.number" type="int" operation="+" default="0"/>
@@ -15,7 +20,8 @@
 	</target>
 	
 	<!-- ================================= 
-          target: inner.dist              
+          target: inner.dist 
+          For midlestone builds             
          ================================= -->
     <target name="inner.dist" depends="compile" description="Build project for inner usage">
     	<mkdir dir="${dist}/lib"/>
@@ -28,71 +34,84 @@
     	</copy>
     	
     	<mkdir dir="${dist}/documents"/>
-    	    	<copy todir="${dist}/documents">
-    	    		<fileset dir="documents"/>
-    	    	</copy>
+    	<copy todir="${dist}/documents">
+    		<fileset dir="documents"/>
+    	</copy>
     	
     	<mkdir dir="${dist}/scripts"/>
-    	    	<copy todir="${dist}/scripts">
-    	    		<fileset dir="scripts"/>
-    	    	</copy>
+    	<copy todir="${dist}/scripts">
+    		<fileset dir="scripts"/>
+    	</copy>
     	
-    	    	<copy todir="${dist}">
-    	    		<fileset file="install/run.bat"/>
-    	    	</copy>
+    	<copy todir="${dist}">
+    		<fileset file="install/run.bat"/>
+    	</copy>
     			
-    	<echo file="${dist}/config/version.txt">version=${build.number.first.number}.${build.number.second.number}.${build.number.third.number}</echo>
+    	<echo file="${dist}/bin/META-INF/version.txt">version=${build.number.first.number}.${build.number.second.number}.${build.number.third.number}</echo>
     	
     	<exec dir="${dist}" failonerror="true" executable="cmd" os="Windows XP">
     		<arg line="/c run.bat"/>
     	</exec>
     </target>
-
 	
+	<!-- ================================= 
+	          target: dist 
+	          For release builds             
+	         ================================= -->
 	<target name="dist" depends="compile,increment">
 		<mkdir dir="${dist}/lib"/>
 		<mkdir dir="${dist}/logs"/>
 		
 		<copy todir="${dist}/lib">
-			<fileset dir=".">
-	    		<include name="*.jar"/>
+			<fileset dir="${REPO_HOME}">
+				<include name="*.jar"/>
 			</fileset>
 		</copy>
-		
-		<copy todir="${dist}/bin">
-			<fileset dir="bin">
-			</fileset>
+		    	
+		<mkdir dir="${dist}/documents"/>
+		<copy todir="${dist}/documents">
+			<fileset dir="documents"/>
 		</copy>
-		
-		
-		<copy todir="${dist}" file="run.bat"/>		
-		<copy todir="${dist}" file="readme.txt"/>
-		<copy todir="${dist}" file="log4j.properties"/>
-		
-		<echo file="${dist}/version.txt">version=${build.number.first.number}.${build.number.second.number}.${build.number.third.number}</echo>
+		    	
+		<mkdir dir="${dist}/scripts"/>
+		<copy todir="${dist}/scripts">
+			<fileset dir="scripts"/>
+		</copy>
+		    	
+		<copy todir="${dist}">
+			<fileset file="install/run.bat"/>
+		</copy>
+		    			
+		<echo file="${dist}/bin/META-INF/version.txt">version=${build.number.first.number}.${build.number.second.number}.${build.number.third.number}</echo>
 		
 		 <zip destfile="${dist.archive.name}" basedir="${dist}" update="true"/>
 	</target>
 	
 	<!-- ================================= 
-          target: mail              
+          target: mail 
+          Mail distributive to customer         
          ================================= -->
-    <target name="mail" depends="dist" description="Mail distributive to the customer">
-    	<mail mailhost="smtp.gmail.com" mailport="465" subject="Build" ssl="true"
-    			      user="starreider15@gmail.com"
-    			      password="PAWvJjsoqJ">
-    			  <from address="starreider15@gmail.com"/>
-    			  <to address="am.moshkov@gmail.com"/>
-    			  <message>The build version=${build.number.first.number}.${build.number.second.number}.${build.number.third.number} has completed</message>
-    			  <attachments>
-    			    <fileset dir=".">
-    			      <include name="${dist.archive.name}"/>
-    			    </fileset>
-    			  </attachments>
-    			</mail>
+    <target name="mail" depends="dist">
+    	<mail mailhost="${mail.host}" 
+    		  mailport="${mail.port}" 
+    		  subject="${mail.subject}" 
+    		  ssl="true" 
+    		  user="${mail.user.from}"
+    		  password="${mail.password}">
+    		<from address="${mail.user.from}"/>
+    		<to address="${mail.user.to}"/>
+    		<message>The build version=${build.number.first.number}.${build.number.second.number}.${build.number.third.number} has completed</message>
+    		<attachments>
+    			<fileset dir=".">
+    				<include name="${dist.archive.name}"/>
+    			</fileset>
+    		</attachments>
+    	</mail>
     </target>
-
 	
+	<!-- ================================= 
+	          target: compile         
+	         ================================= -->
 	<target name="compile" depends="clean">
 		
 		<mkdir dir="${dist}"/>
@@ -113,6 +132,9 @@
 		</copy>
 	</target>
 	
+	<!-- ================================= 
+		          target: clean         
+		         ================================= -->
     <target name="clean">
         <delete dir="${dist}"/>
     	<delete file="${dist.archive.name}"/>

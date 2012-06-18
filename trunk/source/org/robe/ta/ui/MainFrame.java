@@ -368,7 +368,7 @@ public class MainFrame
                              ArrayList<List<Object>> dd = new ArrayList<List<Object>>();
                              for(Object[] ar : array)
                              {
-                            	 ArrayList<Object> p = new ArrayList<>();
+                            	 ArrayList<Object> p = new ArrayList<Object>();
                             	 p.add(ar);
                             	 for(Object[] ar2 : array)
                             	 {

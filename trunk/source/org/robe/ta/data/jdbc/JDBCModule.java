@@ -33,7 +33,7 @@ public class JDBCModule implements DataProvider
 		Log = LogFactory.getLog(JDBCModule.class);
 	}
 	
-	public JDBCModule(String jdbcURL) throws ClassNotFoundException, SQLException 
+	public JDBCModule(String jdbcURL) throws Exception 
 	{
 		try 
 		{
