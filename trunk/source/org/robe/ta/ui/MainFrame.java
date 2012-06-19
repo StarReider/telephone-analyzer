@@ -2,14 +2,12 @@ package org.robe.ta.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Canvas;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -30,15 +28,6 @@ import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.border.EmptyBorder;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.DefaultHighlighter;
-import javax.swing.text.DefaultStyledDocument;
-import javax.swing.text.Highlighter;
-import javax.swing.text.SimpleAttributeSet;
-import javax.swing.text.Style;
-import javax.swing.text.StyleConstants;
-import javax.swing.text.StyleContext;
-import javax.swing.text.StyledDocument;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -47,6 +36,7 @@ import org.mozilla.interfaces.nsIDOMDocument;
 import org.mozilla.interfaces.nsIDOMElement;
 import org.mozilla.interfaces.nsIDOMNode;
 import org.mozilla.interfaces.nsIDOMNodeList;
+import org.robe.ta.conf.ConfigurationReader;
 import org.robe.ta.data.DataProvider;
 
 import ru.atomation.jbrowser.impl.JBrowserBuilder;
@@ -60,7 +50,7 @@ public class MainFrame
     private final Log log; 
     private final DataProvider dataFacade;
 
-    public MainFrame(final DataProvider dataFacade, String version) throws Exception
+    public MainFrame(final DataProvider dataFacade, ConfigurationReader configurationReader) throws Exception
     {
     	log = LogFactory.getLog(MainFrame.class); 
     	this.dataFacade = dataFacade;
@@ -68,7 +58,7 @@ public class MainFrame
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
 		JFrame frame = new JFrame();
-		frame.setTitle("TelephoneAnalyzer" + version);
+		frame.setTitle("TelephoneAnalyzer" + configurationReader.getVersion());
 		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE); 
 		frame.addWindowListener(new WindowAdapter() 
 		{
@@ -105,7 +95,8 @@ public class MainFrame
 		
 		tabContainer.addTab("Second Tab", makeSecondTab());
 		
-		tabContainer.addTab("Third Tab", makeThirdTab());
+		if(configurationReader.isThird_tab_on())
+			tabContainer.addTab("Third Tab", makeThirdTab());
     }
 	
 	@SuppressWarnings("serial")

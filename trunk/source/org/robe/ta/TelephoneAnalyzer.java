@@ -42,11 +42,11 @@ public class TelephoneAnalyzer
     	log.info("Initialize db subsystem done");    	
     	
     	log.info("Initialize GUI subsystem starting...");
-		createGUI(dataFacade, configurationReader.getVersion());
+		createGUI(dataFacade, configurationReader);
     	log.info("Initialize GUI subsystem done");
 	}
 	
-	private void createGUI(final DataProvider dataFacade, final String version) 
+	private void createGUI(final DataProvider dataFacade, final ConfigurationReader configurationReader) 
 	{
 		SwingUtilities.invokeLater(new Runnable() 
 		{
@@ -55,7 +55,7 @@ public class TelephoneAnalyzer
 			{
 				try
 				{
-					new MainFrame(dataFacade, version);
+					new MainFrame(dataFacade, configurationReader);
 				} 
 				catch (Exception e) 
 				{

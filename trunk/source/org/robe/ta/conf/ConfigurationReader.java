@@ -19,6 +19,7 @@ public class ConfigurationReader
 	private static final String SERVER_TAG = "db.server";
 	private static final String PATH_TAG = "db.path";
 	private static final String VERSION_TAG = "version";
+	private static final String THIRD_TAB_TAG = "db.third_tab";
 	
 	private final Log log;
 	
@@ -27,6 +28,7 @@ public class ConfigurationReader
 	private Integer port;
 	private String version;
 	private RunMode mode;
+	private boolean third_tab_on;
 	
 	public ConfigurationReader() throws ConfigurationException
 	{
@@ -61,6 +63,15 @@ public class ConfigurationReader
 		try 
 		{
 			server = conf.getString(SERVER_TAG);
+		} 
+		catch (Exception e) 
+		{
+			log.info(e);
+		}
+		
+		try 
+		{
+			third_tab_on = conf.getBoolean(THIRD_TAB_TAG);
 		} 
 		catch (Exception e) 
 		{
@@ -126,6 +137,11 @@ public class ConfigurationReader
 	public RunMode getMode() 
 	{
 		return mode;
+	}
+	
+	public boolean isThird_tab_on() 
+	{
+		return third_tab_on;
 	}
 	
 	public String getJDBCURL()
