@@ -19,7 +19,7 @@ public class ConfigurationReader
 	private static final String SERVER_TAG = "db.server";
 	private static final String PATH_TAG = "db.path";
 	private static final String VERSION_TAG = "version";
-	private static final String THIRD_TAB_TAG = "db.third_tab";
+	private static final String THIRD_TAB_TAG = "ui.third_tab";
 	
 	private final Log log;
 	

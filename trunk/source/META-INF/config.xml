@@ -2,8 +2,10 @@
 
 <configuration>
   <db>
-	<path>D:\Developmen\Sandbox\exampledb</path>
+	<path>D:\Dropbox\anton\exampledb</path>
 	<server></server>
 	<port></port>
   </db>
+  <ui>
+  </ui>
 </configuration>
