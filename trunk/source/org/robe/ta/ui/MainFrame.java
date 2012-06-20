@@ -2,12 +2,14 @@ package org.robe.ta.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Canvas;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -28,6 +30,16 @@ import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.HyperlinkEvent;
+import javax.swing.event.HyperlinkListener;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DefaultHighlighter;
+import javax.swing.text.Document;
+import javax.swing.text.Highlighter;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledDocument;
+import javax.swing.text.html.HTML;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -50,6 +62,35 @@ public class MainFrame
     private final Log log; 
     private final DataProvider dataFacade;
 
+    private int linkID = 0;
+    public void addHyperlink(Document document, int start, int end, String group) throws BadLocationException 
+    {
+    	Pattern pattern;
+		
+			pattern = Pattern.compile("((8|\\+[0-9]{1,4})?[\\-\\(]?[0-9]{3,6}[\\-\\)]\\s?[0-9\\-]{5,})");
+		
+		
+    	
+        SimpleAttributeSet attrs = new SimpleAttributeSet();
+        StyleConstants.setUnderline(attrs, true);
+        StyleConstants.setForeground(attrs, Color.RED);
+        attrs.addAttribute(HTML.Attribute.ID, new Integer(++linkID));
+        attrs.addAttribute(HTML.Attribute.HREF, "hhhhh");
+        attrs.addAttribute("telephone", group);
+        //doc.insertString(doc.getLength(), "", attrs);
+        
+        Matcher matcher = pattern.matcher(document.getText(0, document.getLength()));
+    	
+
+		while (matcher.find()) 
+        {
+        	start = matcher.start();
+        	end = matcher.end();
+        }
+        
+        ((StyledDocument) document).setCharacterAttributes(start, end, attrs, false);     
+    }
+    
     public MainFrame(final DataProvider dataFacade, ConfigurationReader configurationReader) throws Exception
     {
     	log = LogFactory.getLog(MainFrame.class); 
@@ -93,7 +134,7 @@ public class MainFrame
 		JBrowserComponent<?> browser = canvasFactory.createBrowser(); 
 		//browser.setUrl("http://viaduk-podolsk.ru/auto_sell");
 		
-		tabContainer.addTab("Second Tab", makeSecondTab());
+		tabContainer.addTab("Second Tab", makeSecondTab(frame));
 		
 		if(configurationReader.isThird_tab_on())
 			tabContainer.addTab("Third Tab", makeThirdTab());
@@ -450,19 +491,21 @@ public class MainFrame
 		return new ThirdTabPanel(dataFacade);
 	}
 
-	private JComponent makeSecondTab() throws Exception 
+	private JComponent makeSecondTab(JFrame frame) throws Exception 
 	{
         JPanel panel = new JPanel(false);
         final JTextPane textArea = new JTextPane();
         textArea.setContentType("text/html");
-        
+        textArea.addMouseMotionListener(new LinkController(frame));
+        //textArea.setEditable(false);
+      
   
         final JScrollPane scrollPane = new JScrollPane(textArea);
         
-//        final DefaultHighlighter.DefaultHighlightPainter highlightPainterGreen = 
-//                new DefaultHighlighter.DefaultHighlightPainter(Color.GREEN);
-//        final DefaultHighlighter.DefaultHighlightPainter highlightPainterRed = 
-//                new DefaultHighlighter.DefaultHighlightPainter(Color.RED);        
+        final DefaultHighlighter.DefaultHighlightPainter highlightPainterGreen = 
+                new DefaultHighlighter.DefaultHighlightPainter(Color.GREEN);
+        final DefaultHighlighter.DefaultHighlightPainter highlightPainterRed = 
+                new DefaultHighlighter.DefaultHighlightPainter(Color.RED);        
                 
         JButton button = new JButton("Search");
         button.setActionCommand("search");
@@ -507,16 +550,16 @@ public class MainFrame
 			public void actionPerformed(ActionEvent arg0) 
 			{
 				String text;
-//				int textLength = textArea.getDocument().getLength();
-//				try 
-//				{
-//					text = textArea.getDocument().getText(0, textLength);
-//				} 
-//				catch (BadLocationException e1) 
-//				{
-//					return;
-//				}
-				text = textArea.getText();
+				int textLength = textArea.getDocument().getLength();
+				try 
+				{
+					text = textArea.getDocument().getText(0, textLength);
+				} 
+				catch (BadLocationException e1) 
+				{
+					return;
+				}
+				//text = textArea.getText();
 				String patternString = patternField.getText();
 				
 				log.info("pattern " + patternString);
@@ -535,13 +578,13 @@ public class MainFrame
 				String group = null;
 				int start, end;
 				
-//				Highlighter hilite = textArea.getHighlighter();
-//			    Highlighter.Highlight[] hilites = hilite.getHighlights();
+				Highlighter hilite = textArea.getHighlighter();
+			    Highlighter.Highlight[] hilites = hilite.getHighlights();
 
-//			    for (int i = 0; i < hilites.length; i++) 
-//			    {
-//			        hilite.removeHighlight(hilites[i]);
-//			    }
+			    for (int i = 0; i < hilites.length; i++) 
+			    {
+			        hilite.removeHighlight(hilites[i]);
+			    }
   
 				while (matcher.find()) 
 	            {
@@ -589,7 +632,11 @@ public class MainFrame
 	            		try 
 	            		{
 							//textArea.getHighlighter().addHighlight(start, end, highlightPainterRed);
-	            			text = text.replace(group, "<span style='color:red'>" + group + "</span>");
+	            			//textArea.getDocument().getText(text.indexOf(group), group.length());
+	            			addHyperlink(textArea.getDocument(), start, end, group);
+	            			//text = text.replace(group, "<span style='color:red'>" + group + "</span>");
+	                    	//textArea.insertComponent(new JButton("x"));
+	            			
 						} 
 	            		catch (Exception e) 
 	            		{
@@ -598,7 +645,7 @@ public class MainFrame
 	            		log.info(group + " wasn't finded");
 	            	}
 	            }
-            	textArea.setText(text);
+            	//textArea.setText(text);
 			}
 		});
 
