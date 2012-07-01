@@ -9,9 +9,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
@@ -30,8 +31,6 @@ import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.border.EmptyBorder;
-import javax.swing.event.HyperlinkEvent;
-import javax.swing.event.HyperlinkListener;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultHighlighter;
 import javax.swing.text.Document;
@@ -63,32 +62,20 @@ public class MainFrame
     private final DataProvider dataFacade;
 
     private int linkID = 0;
-    public void addHyperlink(Document document, int start, int end, String group) throws BadLocationException 
+    private Map<String, Integer> attrsArr = new HashMap<>();
+    
+    public void addHyperlink(Document document, int start, int end, String group, boolean finded) throws BadLocationException 
     {
-    	Pattern pattern;
-		
-			pattern = Pattern.compile("((8|\\+[0-9]{1,4})?[\\-\\(]?[0-9]{3,6}[\\-\\)]\\s?[0-9\\-]{5,})");
-		
-		
-    	
         SimpleAttributeSet attrs = new SimpleAttributeSet();
+        attrsArr.put(group, start);
         StyleConstants.setUnderline(attrs, true);
-        StyleConstants.setForeground(attrs, Color.RED);
+        StyleConstants.setForeground(attrs, finded ? Color.GREEN : Color.RED);
         attrs.addAttribute(HTML.Attribute.ID, new Integer(++linkID));
         attrs.addAttribute(HTML.Attribute.HREF, "hhhhh");
-        attrs.addAttribute("telephone", group);
-        //doc.insertString(doc.getLength(), "", attrs);
+        if(!finded)
+        	attrs.addAttribute("telephone", group);
         
-        Matcher matcher = pattern.matcher(document.getText(0, document.getLength()));
-    	
-
-		while (matcher.find()) 
-        {
-        	start = matcher.start();
-        	end = matcher.end();
-        }
-        
-        ((StyledDocument) document).setCharacterAttributes(start, end, attrs, false);     
+        ((StyledDocument) document).setCharacterAttributes(start, group.length(), attrs, false);
     }
     
     public MainFrame(final DataProvider dataFacade, ConfigurationReader configurationReader) throws Exception
@@ -496,7 +483,7 @@ public class MainFrame
         JPanel panel = new JPanel(false);
         final JTextPane textArea = new JTextPane();
         textArea.setContentType("text/html");
-        textArea.addMouseMotionListener(new LinkController(frame));
+        textArea.addMouseMotionListener(new LinkController(frame, attrsArr, textArea, dataFacade));
         //textArea.setEditable(false);
       
   
@@ -507,8 +494,8 @@ public class MainFrame
         final DefaultHighlighter.DefaultHighlightPainter highlightPainterRed = 
                 new DefaultHighlighter.DefaultHighlightPainter(Color.RED);        
                 
-        JButton button = new JButton("Search");
-        button.setActionCommand("search");
+        JButton searchButton = new JButton("Search");
+        searchButton.setActionCommand("search");
         
         final JButton clear_button = new JButton("Clear");
         clear_button.setActionCommand("clear");
@@ -533,7 +520,7 @@ public class MainFrame
         final JTextField patternField = new JTextField("((8|\\+[0-9]{1,4})?[\\-\\(]?[0-9]{3,6}[\\-\\)]\\s?[0-9\\-]{5,})");
         JLabel label = new JLabel("Pattern ");
         
-        panel3.add(button);
+        panel3.add(searchButton);
         panel3.add(clear_button);               
         
         panel2.setLayout(new BoxLayout(panel2, BoxLayout.LINE_AXIS));
@@ -544,7 +531,7 @@ public class MainFrame
         panel.add(scrollPane, BorderLayout.CENTER);
         panel.add(panel2, BorderLayout.SOUTH);
         
-        button.addActionListener(new ActionListener() 
+        searchButton.addActionListener(new ActionListener() 
         {			
 			@Override
 			public void actionPerformed(ActionEvent arg0) 
@@ -618,7 +605,8 @@ public class MainFrame
 	            		try 
 	            		{
 							//textArea.getHighlighter().addHighlight(start, end, highlightPainterGreen);
-	            			text = text.replace(group, "<span style='color:green'>" + group + "</span>");
+	            			//text = text.replace(group, "<span style='color:green'>" + group + "</span>");
+	            			addHyperlink(textArea.getDocument(), start, end, group, isFinded);
 						} 
 	            		catch (Exception e) 
 	            		{
@@ -633,7 +621,7 @@ public class MainFrame
 	            		{
 							//textArea.getHighlighter().addHighlight(start, end, highlightPainterRed);
 	            			//textArea.getDocument().getText(text.indexOf(group), group.length());
-	            			addHyperlink(textArea.getDocument(), start, end, group);
+	            			addHyperlink(textArea.getDocument(), start, end, group, isFinded);
 	            			//text = text.replace(group, "<span style='color:red'>" + group + "</span>");
 	                    	//textArea.insertComponent(new JButton("x"));
 	            			

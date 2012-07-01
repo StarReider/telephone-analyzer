@@ -1,5 +1,6 @@
 package org.robe.ta.data.jpa;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
 
@@ -25,7 +26,8 @@ public class JPAModule implements DataProvider
 	@Override
 	public boolean isTelephoneExist(String tel) throws Exception 
 	{
-		Query query = em.createQuery("SELECT e FROM Telephone e WHERE e.telephone = " + new BigInteger(tel));
+		Query query = em.createQuery("SELECT e FROM Telephone e WHERE e.telephone = ?1");
+		query.setParameter(1, new BigDecimal(tel));
 	    List<Telephone> beans = query.getResultList();
 	    if(beans.size() > 0)
 	    	return true;
