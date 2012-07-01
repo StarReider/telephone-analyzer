@@ -14,7 +14,7 @@
 	          Increment build version            
 	         ================================= -->
 	<target name="increment">
-		<propertyfile file="build.properties">
+		<propertyfile file="source/build.properties">
 			<entry key="build.number.third.number" type="int" operation="+" default="0"/>
 		</propertyfile>
 	</target>
@@ -84,7 +84,11 @@
 		    			
 		<echo file="${dist}/bin/META-INF/version.txt">version=${build.number.first.number}.${build.number.second.number}.${build.number.third.number}</echo>
 		
+		<property name="dist.archive.name" value="TelephoneAnalyzer-${build.number.first.number}.${build.number.second.number}.${build.number.third.number}.zip"/>
+		
 		 <zip destfile="${dist.archive.name}" basedir="${dist}" update="true"/>
+		
+		 <delete dir="${dist}"/>
 	</target>
 	
 	<!-- ================================= 
