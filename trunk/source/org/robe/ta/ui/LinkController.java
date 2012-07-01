@@ -6,11 +6,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.math.BigInteger;
-import java.util.Enumeration;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -18,10 +15,10 @@ import java.util.Set;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
-import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.Element;
 import javax.swing.text.SimpleAttributeSet;
@@ -30,7 +27,6 @@ import javax.swing.text.StyledDocument;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.robe.ta.conf.ConfigurationReader;
 import org.robe.ta.data.DataProvider;
 import org.robe.ta.data.jpa.Telephone;
 
@@ -44,11 +40,11 @@ public class LinkController extends MouseAdapter implements MouseMotionListener
 	private JTextField descrField;
 	private Map<String, Integer> attrs;
 	
-	public LinkController(JFrame frame2, Map<String, Integer> attrsArr, final JTextPane textArea, final DataProvider dataFacade) 
+	public LinkController(final JFrame frame2, Map<String, Integer> attrsArr, final JTextPane textArea, final DataProvider dataFacade) 
 	{
-	  frame = frame2;
-	  log = LogFactory.getLog(LinkController.class); 
-	  attrs = attrsArr;
+		frame = frame2;
+		log = LogFactory.getLog(LinkController.class); 
+		attrs = attrsArr;
 		p = new JPopupMenu();
 		
 		telephoneField = new JTextField(""); telephoneField.setEditable(false);
@@ -83,14 +79,16 @@ public class LinkController extends MouseAdapter implements MouseMotionListener
 			    		telephone.setDescription(descrField.getText());
 			    		telephone.setName(organizationField.getText());
 			    		
-			    		try {
+			    		try 
+			    		{
 							dataFacade.createEmptyBean(telephone);
-						} catch (Exception e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
+				    		
+				    		((StyledDocument) textArea.getDocument()).setCharacterAttributes(entry.getValue(), entry.getKey().length(), attrs2, true);
+						} 
+			    		catch (Exception e) 
+			    		{
+			    			JOptionPane.showMessageDialog(frame2, "Telephone can not be saved!\n" + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE, null);
 						}
-			    		
-			    		((StyledDocument) textArea.getDocument()).setCharacterAttributes(entry.getValue(), entry.getKey().length(), attrs2, true);
 			    	}
 			    }
 			}
@@ -136,28 +134,4 @@ public class LinkController extends MouseAdapter implements MouseMotionListener
 			}
 		}
     }
-	
-  /**
-   * Called for a mouse click event.
-   * If the component is read-only (ie a browser) then 
-   * the clicked event is used to drive an attempt to
-   * follow the reference specified by a link.
-   *
-   * @param e the mouse event
-   * @see MouseListener#mouseClicked
-   */
-  public void mouseClicked(MouseEvent e) {
-    JTextPane editor = (JTextPane) e.getSource();
-            
-    if (! editor.isEditable()) {
-      Point pt = new Point(e.getX(), e.getY());
-      int pos = editor.viewToModel(pt);
-      if (pos >= 0) {
-        // get the element at the pos
-        // check if the elemnt has the HREF
-        // attribute defined
-        // if so notify the HyperLinkListeners
-      }
-    }
-  }
 }

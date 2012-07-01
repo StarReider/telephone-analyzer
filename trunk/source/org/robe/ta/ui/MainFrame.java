@@ -371,9 +371,7 @@ public class MainFrame
                         	 nsIDOMDocument document = browser.getWebBrowser()
                                                  		.getContentDOMWindow().getDocument();
 
-                             nsIDOMNode containerDiv = document.getElementsByTagName("body").item(0);
-                             
-                             
+                             nsIDOMNode containerDiv = document.getElementsByTagName("body").item(0);                                                          
                              
                              if(containerDiv == null)
                             	 return;
@@ -399,8 +397,7 @@ public class MainFrame
                             	 if(p.size() > 1)
                             		 dd.add(p);
                              }
-                             
-                             
+                                                          
                              for(Object[] ar : array)
                              {
  		            			nsIDOMNode node = (nsIDOMNode)ar[0];
@@ -485,8 +482,7 @@ public class MainFrame
         textArea.setContentType("text/html");
         textArea.addMouseMotionListener(new LinkController(frame, attrsArr, textArea, dataFacade));
         //textArea.setEditable(false);
-      
-  
+       
         final JScrollPane scrollPane = new JScrollPane(textArea);
         
         final DefaultHighlighter.DefaultHighlightPainter highlightPainterGreen = 
@@ -511,8 +507,7 @@ public class MainFrame
 				}
 			}
 		});
-        
-        
+               
         //panel.setLayout(new GridLayout(0, 2));
         panel.setLayout(new BorderLayout());
         JPanel panel2 = new JPanel();
