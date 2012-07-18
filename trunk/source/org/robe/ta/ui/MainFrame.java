@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -320,7 +322,11 @@ public class MainFrame
 		            			nsIDOMNode parent = node.getParentNode();
 		            			nsIDOMElement span = node.getOwnerDocument().createElement("span");
 		            			nsIDOMNode textNodeNew = node.getOwnerDocument().createTextNode(group);
-		            			span.setAttribute("style", "color:red");
+		            			span.setAttribute("style", "color:red;cursor:pointer");
+		            			span.setAttribute("onclick", "javascript: window.location = 'call:" + group + "';");
+		            			//span.setAttribute("onmouseover", "window.alert('Hello!');");
+		            			
+		            			
 		            			//span.appendChild(node);
 		            			span.appendChild(node.getOwnerDocument().createTextNode(group));
 
@@ -426,7 +432,6 @@ public class MainFrame
 			CloasableTab cloasableTab = new CloasableTab(
 					new Runnable() 
 					{
-		
 						@Override
 						public void run() 
 						{
@@ -464,8 +469,52 @@ public class MainFrame
 			panel2.add(addressField);
 			panel2.add(goButton);
 			
+			JPanel toolsPanel = new JPanel();
+			JPanel fieldsPanel = new JPanel();
+			
+			final JTextField telField = new JTextField();
+			telField.setEditable(false);
+			JTextField orgField = new JTextField();
+			
+			
+			fieldsPanel.setLayout(new BoxLayout(fieldsPanel, BoxLayout.PAGE_AXIS));
+			JPanel tt = new JPanel();tt.setLayout(new BoxLayout(tt, BoxLayout.LINE_AXIS));
+			tt.add(new JLabel("Telephone:")); tt.add(telField).setPreferredSize(new Dimension(10, 5));
+			fieldsPanel.add(tt);
+			tt = new JPanel();tt.setLayout(new BoxLayout(tt, BoxLayout.LINE_AXIS));
+			tt.add(new JLabel("Organization:")); tt.add(orgField);
+			fieldsPanel.add(tt);
+			
+			JButton saveButton = new JButton("Save");
+			toolsPanel.setLayout(new GridLayout(1, 2));
+			toolsPanel.add(fieldsPanel);
+			toolsPanel.add(saveButton);
+			
+			JPanel generalPanel = new JPanel();
+			generalPanel.setLayout(new BoxLayout(generalPanel, BoxLayout.PAGE_AXIS));
+			
+			generalPanel.add(panel2);
+			generalPanel.add(toolsPanel);
+			
 			panel.add(browser.getComponent(), BorderLayout.CENTER);
-			panel.add(panel2, BorderLayout.NORTH);
+			panel.add(generalPanel, BorderLayout.NORTH);
+			
+			browser.addBrowserListener(new BrowserAdapter() 
+			{
+				
+				@Override
+				public boolean beforeOpen(String uri) 
+				{
+					if (uri.startsWith("call:")) 
+					{
+						telField.setText(uri.replaceFirst("call:", ""));
+                        return false;
+					}
+
+					return super.beforeOpen(uri);
+				}
+			});
+			
 			return panel;
 		}
 	}
