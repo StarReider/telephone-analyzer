@@ -11,6 +11,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -22,9 +23,11 @@ import java.util.regex.PatternSyntaxException;
 import javax.swing.BoxLayout;
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -51,6 +54,7 @@ import org.mozilla.interfaces.nsIDOMNode;
 import org.mozilla.interfaces.nsIDOMNodeList;
 import org.robe.ta.conf.ConfigurationReader;
 import org.robe.ta.data.DataProvider;
+import org.robe.ta.data.jpa.Telephone;
 
 import ru.atomation.jbrowser.impl.JBrowserBuilder;
 import ru.atomation.jbrowser.impl.JBrowserCanvas;
@@ -205,14 +209,21 @@ public class MainFrame
 					.createBrowser(parent, attachOnCreation, flags, displayable);
 
 			// i don`t know why swing request JPanel, Canvas work wrong
-			final JPanel browserPanel = createBrowserPanel(browser);
+				JPanel browserPanel = null;
+				final JPanel browserPanel2;
+				try {
+					 browserPanel = createBrowserPanel(browser);
+				} catch (Exception e) {
+					// TODO: handle exception
+				}
+				browserPanel2 = browserPanel;
 			
 			browser.addBrowserListener(new BrowserAdapter() 
 			{
 				@Override
 				public void onSetTitle(String title) 
 				{
-					int index = tabContainer.indexOfComponent(browserPanel);
+					int index = tabContainer.indexOfComponent(browserPanel2);
 					CloasableTab tabComponent = (CloasableTab) tabContainer
 							.getTabComponentAt(index);
 					tabComponent.getLabel().setText(title);
@@ -221,7 +232,7 @@ public class MainFrame
 				@Override
 				public void onCloseWindow() 
 				{
-					int index = tabContainer.indexOfComponent(browserPanel);
+					int index = tabContainer.indexOfComponent(browserPanel2);
 					if (index != -1) {
 						tabContainer.remove(index);
 					}
@@ -435,7 +446,7 @@ public class MainFrame
 						@Override
 						public void run() 
 						{
-							int index = tabContainer.indexOfComponent(browserPanel);
+							int index = tabContainer.indexOfComponent(browserPanel2);
 							tabContainer.remove(index);
 						}
 					}
@@ -448,11 +459,11 @@ public class MainFrame
 			return browser;
 		}
 
-		protected JPanel createBrowserPanel(final JBrowserComponent<?> browser) 
+		protected JPanel createBrowserPanel(final JBrowserComponent<?> browser) throws Exception 
 		{
 			JPanel panel = new JPanel(new BorderLayout());
 			
-			JPanel panel2 = new JPanel();
+			JPanel browserPanel = new JPanel();
 			final JTextField addressField = new JTextField();
 			JButton goButton = new JButton("Go");
 			
@@ -465,17 +476,17 @@ public class MainFrame
 				}
 			});
 			
-			panel2.setLayout(new BoxLayout(panel2, BoxLayout.LINE_AXIS));
-			panel2.add(addressField);
-			panel2.add(goButton);
+			browserPanel.setLayout(new BoxLayout(browserPanel, BoxLayout.LINE_AXIS));
+			browserPanel.add(addressField);
+			browserPanel.add(goButton);
 			
 			JPanel toolsPanel = new JPanel();
 			JPanel fieldsPanel = new JPanel();
 			
 			final JTextField telField = new JTextField();
 			telField.setEditable(false);
-			JTextField orgField = new JTextField();
-			
+			//JTextField orgField = new JTextField();
+			final JComboBox<String> orgField = new JComboBox<String>(dataFacade.getAllOrganizations());//new JList<String>(dataFacade.getAllOrganizations());
 			
 			fieldsPanel.setLayout(new BoxLayout(fieldsPanel, BoxLayout.PAGE_AXIS));
 			JPanel tt = new JPanel();tt.setLayout(new BoxLayout(tt, BoxLayout.LINE_AXIS));
@@ -486,6 +497,24 @@ public class MainFrame
 			fieldsPanel.add(tt);
 			
 			JButton saveButton = new JButton("Save");
+			
+			saveButton.addActionListener(new ActionListener() 
+			{	
+				@Override
+				public void actionPerformed(ActionEvent e) 
+				{
+					Telephone telephone = new Telephone();
+					telephone.setName(orgField.getSelectedItem().toString());
+					telephone.setTelephone(new BigInteger(telField.getText().substring(1)));
+					try {
+						dataFacade.createEmptyBean(telephone);
+					} catch (Exception e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}	
+				}
+			});
+			
 			toolsPanel.setLayout(new GridLayout(1, 2));
 			toolsPanel.add(fieldsPanel);
 			toolsPanel.add(saveButton);
@@ -493,7 +522,7 @@ public class MainFrame
 			JPanel generalPanel = new JPanel();
 			generalPanel.setLayout(new BoxLayout(generalPanel, BoxLayout.PAGE_AXIS));
 			
-			generalPanel.add(panel2);
+			generalPanel.add(browserPanel);
 			generalPanel.add(toolsPanel);
 			
 			panel.add(browser.getComponent(), BorderLayout.CENTER);

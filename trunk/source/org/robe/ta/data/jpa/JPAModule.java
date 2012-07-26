@@ -66,4 +66,12 @@ public class JPAModule implements DataProvider
 		Query query = em.createQuery("SELECT e FROM Telephone e");
 	    return query.getResultList();
 	}
+
+	@Override
+	public String[] getAllOrganizations() throws Exception 
+	{
+		Query query = em.createQuery("SELECT distinct e.name FROM Telephone e");
+		List<String> orgs = query.getResultList();
+	    return (String[]) query.getResultList().toArray(new String[orgs.size()]);
+	}
 }

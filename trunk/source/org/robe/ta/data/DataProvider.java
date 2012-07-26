@@ -19,4 +19,6 @@ public interface DataProvider
 	void createEmptyBean(Telephone telephone) throws Exception;
 	
 	List<Telephone> getAllBeans() throws Exception;
+	
+	String[] getAllOrganizations() throws Exception;
 }

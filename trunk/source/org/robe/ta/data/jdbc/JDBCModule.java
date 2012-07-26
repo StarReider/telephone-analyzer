@@ -143,4 +143,20 @@ public class JDBCModule implements DataProvider
         
         return beans;
 	}
+
+	@Override
+	public String[] getAllOrganizations() throws Exception 
+	{
+		Statement stmt = conn.createStatement();
+        ResultSet res = stmt.executeQuery("SELECT " + NAME_COL_NAME + " FROM " + TABLE_NAME);  
+        List<String> orgs = new ArrayList<String>();
+        
+        while(res.next()) 
+        {
+        	String name = res.getString(NAME_COL_NAME);
+        	orgs.add(name);
+        }
+        
+        return orgs.toArray(new String[orgs.size()]);
+	}
 }
