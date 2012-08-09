@@ -3,6 +3,7 @@ package org.robe.ta.ui;
 import java.awt.BorderLayout;
 import java.awt.Canvas;
 
+import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
@@ -13,6 +14,7 @@ import org.robe.ta.data.DataProvider;
 import ru.atomation.jbrowser.impl.JBrowserCanvas;
 import ru.atomation.jbrowser.impl.JBrowserComponent;
 import ru.atomation.jbrowser.impl.JComponentFactory;
+import ru.atomation.jbrowser.interfaces.BrowserAdapter;
 
 	public class TabbedComponentFactory extends JComponentFactory<Canvas>
 	{
@@ -30,7 +32,7 @@ import ru.atomation.jbrowser.impl.JComponentFactory;
 
 		@Override
 		@SuppressWarnings("unchecked")
-		public JBrowserComponent<Canvas> createBrowser(JBrowserComponent<?> parent, boolean attachOnCreation,long flags, boolean displayable) 
+		public JBrowserComponent<Canvas> createBrowser(final JBrowserComponent<?> parent, boolean attachOnCreation,long flags, boolean displayable) 
 			
 		{
 				final JBrowserComponent<Canvas> browser = (JBrowserComponent<Canvas>) super
@@ -38,10 +40,30 @@ import ru.atomation.jbrowser.impl.JComponentFactory;
 				
 				if(parent != null)
 				{
-					panel.remove(parent.getComponent());
-					panel.add(browser.getComponent(), BorderLayout.CENTER);
+//					panel.remove(parent.getComponent());
+//					panel.add(browser.getComponent(), BorderLayout.CENTER);					
+					
+					final JFrame frame = new JFrame();
+					JPanel panel = new JPanel();
+					frame.add(panel);
+										
+					browser.addBrowserListener(new BrowserAdapter() 
+					{
+						@Override
+						public void onLoadingEnded() 
+						{
+							parent.setUrl(browser.getUrl());
+							frame.dispose();
+							super.onLoadingEnded();
+						}
+					});
+
+					panel.add(browser.getComponent());
+					frame.setVisible(true);
+					
+					//tabContainer.addTab("", panel); 
 				}
-			
+				
 				return browser;
 		}
 	}

@@ -70,7 +70,7 @@ public class JPAModule implements DataProvider
 	@Override
 	public String[] getAllOrganizations() throws Exception 
 	{
-		Query query = em.createQuery("SELECT distinct e.name FROM Telephone e");
+		Query query = em.createQuery("SELECT distinct e.name FROM Telephone e ORDER BY e.name");
 		List<String> orgs = query.getResultList();
 	    return (String[]) query.getResultList().toArray(new String[orgs.size()]);
 	}
