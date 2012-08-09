@@ -13,6 +13,7 @@ import org.apache.commons.logging.LogFactory;
 import org.mozilla.browser.MozillaExecutor;
 import org.mozilla.interfaces.nsIDOMDocument;
 import org.mozilla.interfaces.nsIDOMElement;
+import org.mozilla.interfaces.nsIDOMNamedNodeMap;
 import org.mozilla.interfaces.nsIDOMNode;
 import org.mozilla.interfaces.nsIDOMNodeList;
 import org.robe.ta.data.DataProvider;
@@ -37,7 +38,6 @@ public class SearchListener extends BrowserAdapter
 		if(text == null || node.getNodeType() != nsIDOMNode.TEXT_NODE)
 			return;
 		String patternString = "((8|\\+[0-9]{1,4})?[\\-\\(]?[0-9]{3,6}[\\-\\)]\\s?[0-9\\-]{5,})";
-		
 		
 		Pattern pattern;
 		try 
@@ -89,19 +89,29 @@ public class SearchListener extends BrowserAdapter
         			i1 = i1 + group.length();
         			after = text.substring(i1, text.length());
         			nsIDOMNode parent = node.getParentNode();
+        			
         			nsIDOMElement span = node.getOwnerDocument().createElement("span");
-        			
-        			span.setAttribute("style", "color:green");
-        			
+        			span.setAttribute("style", "color:green");        			
         			span.appendChild(node.getOwnerDocument().createTextNode(group));
         			
-        			Object[] ar = {node, parent, span, node.getOwnerDocument().createTextNode(before), node.getOwnerDocument().createTextNode(after)};
-        			array.add(ar);
+        			if(parent.getNodeName().equalsIgnoreCase("a"))
+        			{
+        				nsIDOMNamedNodeMap attrs = parent.getAttributes();
+        				for(int i = (int) attrs.getLength() - 1; i >= 0;i--)
+        				{
+        					attrs.item(i).setNodeValue("");
+        				}
+        			}
         			
-//        			parent.removeChild(node);
-//        			parent.appendChild(node.getOwnerDocument().createTextNode(before));
-//        			parent.appendChild(span);
-//        			parent.appendChild(node.getOwnerDocument().createTextNode(after));
+        			Object[] ar = 
+        				{
+        					node, 
+        					parent, 
+        					span, 
+        					node.getOwnerDocument().createTextNode(before), 
+        					node.getOwnerDocument().createTextNode(after)
+        				};
+        			array.add(ar);
 				} 
         		catch (Exception e) 
         		{
@@ -131,14 +141,18 @@ public class SearchListener extends BrowserAdapter
         			//span.appendChild(node);
         			span.appendChild(node.getOwnerDocument().createTextNode(group));
 
+        			if(parent.getNodeName().equalsIgnoreCase("a"))
+        			{
+        				nsIDOMNamedNodeMap attrs = parent.getAttributes();
+        				for(int i = (int) attrs.getLength() - 1; i >= 0;i--)
+        				{
+        					attrs.item(i).setNodeValue("");
+        				}
+        			}
+        			
         			Object[] ar = {node, parent, span, node.getOwnerDocument().createTextNode(before), node.getOwnerDocument().createTextNode(after)};
         			array.add(ar);
-        			
-//        			parent.removeChild(node);
-//        			parent.appendChild(node.getOwnerDocument().createTextNode(before));
-//        			parent.appendChild(span);
-//        			parent.appendChild(node.getOwnerDocument().createTextNode(after));
-				} 
+        							} 
         		catch (Exception e) 
         		{
         			log.warn(e);
