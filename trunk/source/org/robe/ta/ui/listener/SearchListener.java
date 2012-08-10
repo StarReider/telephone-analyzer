@@ -96,11 +96,11 @@ public class SearchListener extends BrowserAdapter
         			
         			if(parent.getNodeName().equalsIgnoreCase("a"))
         			{
-        				nsIDOMNamedNodeMap attrs = parent.getAttributes();
-        				for(int i = (int) attrs.getLength() - 1; i >= 0;i--)
-        				{
-        					attrs.item(i).setNodeValue("");
-        				}
+        				nsIDOMNode hl_parent = parent.getParentNode();
+        				parent.removeChild(node);
+        				hl_parent.appendChild(node);
+        				hl_parent.removeChild(parent);
+        				parent = hl_parent;
         			}
         			
         			Object[] ar = 
@@ -143,11 +143,11 @@ public class SearchListener extends BrowserAdapter
 
         			if(parent.getNodeName().equalsIgnoreCase("a"))
         			{
-        				nsIDOMNamedNodeMap attrs = parent.getAttributes();
-        				for(int i = (int) attrs.getLength() - 1; i >= 0;i--)
-        				{
-        					attrs.item(i).setNodeValue("");
-        				}
+        				nsIDOMNode hl_parent = parent.getParentNode();
+        				parent.removeChild(node);
+        				hl_parent.appendChild(node);
+        				hl_parent.removeChild(parent);
+        				parent = hl_parent;
         			}
         			
         			Object[] ar = {node, parent, span, node.getOwnerDocument().createTextNode(before), node.getOwnerDocument().createTextNode(after)};
