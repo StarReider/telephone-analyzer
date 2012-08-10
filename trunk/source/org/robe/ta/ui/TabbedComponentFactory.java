@@ -47,12 +47,19 @@ import ru.atomation.jbrowser.interfaces.BrowserAdapter;
 					JPanel panel = new JPanel();
 					frame.add(panel);
 										
+					log.debug("fake frame is ready");
+					
 					browser.addBrowserListener(new BrowserAdapter() 
 					{
 						@Override
 						public void onLoadingEnded() 
 						{
-							parent.setUrl(browser.getUrl());
+							if(!browser.getUrl().contains("cian.ru"))
+							{
+								log.debug("URL is bring fake frame's value");
+								//parent.setUrl(browser.getUrl());
+							}
+
 							frame.dispose();
 							super.onLoadingEnded();
 						}
