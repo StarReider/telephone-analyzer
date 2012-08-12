@@ -1,15 +1,23 @@
 package org.robe.ta.ui;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextField;
+import javax.swing.RowFilter;
+import javax.swing.SwingConstants;
+import javax.swing.event.DocumentListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
+import javax.swing.table.TableRowSorter;
+import javax.swing.event.DocumentEvent;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -26,7 +34,8 @@ public class ThirdTabPanel extends JPanel
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable DataBaseTable;
     private javax.swing.JButton DoQuery;
-
+    private JTextField filterText;
+    
 	public ThirdTabPanel(DataProvider dataFacade) 
 	{
 		log = LogFactory.getLog(ThirdTabPanel.class); 
@@ -37,10 +46,53 @@ public class ThirdTabPanel extends JPanel
         DataBaseTable.setVisible(false);
         setSize(500,420);
     }
+	
+	private void newFilter() 
+	{
+		 RowFilter<BeanTableModel, Object> rf = null;
+	        //If current expression doesn't parse, don't update.
+	        try 
+	        {
+	            rf = RowFilter.regexFilter(filterText.getText());
+	        } 
+	        catch (java.util.regex.PatternSyntaxException e) 
+	        {
+	            return;
+	        }
+	        TableRowSorter<BeanTableModel> sorter = (TableRowSorter<BeanTableModel>) DataBaseTable.getRowSorter();
+	        
+	        sorter.setRowFilter(rf);
+	}
 
     private void initComponents() 
     {
         DataBaseTable = new javax.swing.JTable();
+        DataBaseTable.setAutoCreateRowSorter(true);
+
+        JLabel l1 = new JLabel("Filter Text:", SwingConstants.TRAILING);
+        filterText = new JTextField(22);
+
+        //Whenever filterText changes, invoke newFilter.
+        filterText.getDocument().addDocumentListener
+        (
+                new DocumentListener() 
+                {
+                    public void changedUpdate(DocumentEvent e) 
+                    {
+                        newFilter();
+                    }
+                    public void insertUpdate(DocumentEvent e) 
+                    {
+                        newFilter();
+                    }
+                    public void removeUpdate(DocumentEvent e) 
+                    {
+                        newFilter();
+                    }
+                }
+         );
+        l1.setLabelFor(filterText);
+        
         DoQuery = new javax.swing.JButton();
         DoQuery.setActionCommand("do");
         final JButton but = new JButton("Add");
@@ -100,6 +152,8 @@ public class ThirdTabPanel extends JPanel
         });
         
         JPanel panel = new JPanel();
+        panel.add(l1);
+        panel.add(filterText);
         panel.add(DoQuery);
         panel.add(but);
         

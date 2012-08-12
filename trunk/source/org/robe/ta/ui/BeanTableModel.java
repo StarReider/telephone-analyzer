@@ -27,7 +27,7 @@ public class BeanTableModel extends AbstractTableModel
 			switch(columnIndex)
 			{
 				case 0:
-					return int.class;
+					return Integer.class;
 				case 1:
 					return BigInteger.class;
 				case 2:
