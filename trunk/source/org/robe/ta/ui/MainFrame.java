@@ -8,6 +8,8 @@ import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -187,9 +189,34 @@ public class MainFrame
 			@Override
 			public boolean beforeOpen(String uri) 
 			{
-				if (uri.startsWith("call:")) 
+				try 
 				{
-					telField.setText(uri.replaceFirst("call:", ""));
+					uri = URLDecoder.decode(uri, "UTF-8");
+				} 
+				catch (UnsupportedEncodingException e) 
+				{
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				if (uri.startsWith("call:add_tel")) 
+				{
+					telField.setText(uri.replaceFirst("call:add_tel", ""));
+                    return false;
+				}
+				else if(uri.startsWith("call:show_org"))
+				{
+					String[] ent = uri.replaceFirst("call:show_org", "").split(";");
+					if(ent.length != 2)
+						return false;
+					String org = ent[1];
+					String tel = ent[0];
+					telField.setText(tel);
+					
+					log.info("Organization = " + org);
+					
+					orgField.setSelectedItem(org);
+					
                     return false;
 				}
 

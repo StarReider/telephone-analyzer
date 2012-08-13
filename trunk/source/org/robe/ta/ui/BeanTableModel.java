@@ -8,8 +8,9 @@ import javax.swing.table.AbstractTableModel;
 import org.robe.ta.data.jpa.Telephone;
 
 public class BeanTableModel extends AbstractTableModel 
-    {
+{
     	private List<Telephone> beans;
+    	int i = 1;
     	
     	public List<Telephone> getBeans() 
     	{
@@ -40,7 +41,7 @@ public class BeanTableModel extends AbstractTableModel
 		@Override
 		public int getColumnCount() 
 		{
-			return 4;
+			return 5;
 		}
 
 		@Override
@@ -116,4 +117,4 @@ public class BeanTableModel extends AbstractTableModel
         	beans.add((Telephone) bean);
         	fireTableRowsInserted(beans.size(), beans.size());
         }
-    }
+}

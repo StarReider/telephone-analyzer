@@ -91,8 +91,9 @@ public class SearchListener extends BrowserAdapter
         			nsIDOMNode parent = node.getParentNode();
         			
         			nsIDOMElement span = node.getOwnerDocument().createElement("span");
-        			span.setAttribute("style", "color:green");        			
+        			span.setAttribute("style", "color:green;cursor:pointer");        			
         			span.appendChild(node.getOwnerDocument().createTextNode(group));
+        			span.setAttribute("onclick", "javascript: window.location = 'call:show_org" + group.trim() + ";" + dataFacade.getOrganization(rep_group).trim() + "';");
         			
         			if(parent.getNodeName().equalsIgnoreCase("a"))
         			{
@@ -134,7 +135,7 @@ public class SearchListener extends BrowserAdapter
         			nsIDOMElement span = node.getOwnerDocument().createElement("span");
         			nsIDOMNode textNodeNew = node.getOwnerDocument().createTextNode(group);
         			span.setAttribute("style", "color:red;cursor:pointer");
-        			span.setAttribute("onclick", "javascript: window.location = 'call:" + group + "';");
+        			span.setAttribute("onclick", "javascript: window.location = 'call:add_tel" + group.trim() + "';");
         			//span.setAttribute("onmouseover", "window.alert('Hello!');");
         			
         			

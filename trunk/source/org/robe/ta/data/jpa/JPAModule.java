@@ -64,6 +64,7 @@ public class JPAModule implements DataProvider
 	public List<Telephone> getAllBeans() throws Exception 
 	{
 		Query query = em.createQuery("SELECT e FROM Telephone e");
+		System.out.println("all telephones quantity are " + query.getResultList().size());
 	    return query.getResultList();
 	}
 
@@ -73,5 +74,14 @@ public class JPAModule implements DataProvider
 		Query query = em.createQuery("SELECT distinct e.name FROM Telephone e ORDER BY e.name");
 		List<String> orgs = query.getResultList();
 	    return (String[]) query.getResultList().toArray(new String[orgs.size()]);
+	}
+
+	@Override
+	public String getOrganization(String tel) throws Exception 
+	{
+		Query query = em.createQuery("SELECT e.name FROM Telephone e WHERE e.telephone = ?1");
+		query.setParameter(1, new BigDecimal(tel));
+	    String org = (String) query.getSingleResult();
+		return org;
 	}
 }

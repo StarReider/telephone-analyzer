@@ -159,4 +159,10 @@ public class JDBCModule implements DataProvider
         
         return orgs.toArray(new String[orgs.size()]);
 	}
+
+	@Override
+	public String getOrganization(String orgName) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

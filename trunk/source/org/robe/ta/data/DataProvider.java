@@ -21,4 +21,6 @@ public interface DataProvider
 	List<Telephone> getAllBeans() throws Exception;
 	
 	String[] getAllOrganizations() throws Exception;
+	
+	String getOrganization(String orgName) throws Exception;
 }
