@@ -165,7 +165,7 @@ public class ThirdTabPanel extends JPanel
     {
         try 
         {
-        	List<Telephone> beans = (List<Telephone>) dataFacade.getAllBeans();
+        	List<Telephone> beans = (List<Telephone>) dataFacade.getAllTelephones();
 
             model = new BeanTableModel(beans);
             model.addTableModelListener(new TableModelListener() 
@@ -185,7 +185,7 @@ public class ThirdTabPanel extends JPanel
 //						BigInteger telephoneNumber = DataBaseTable.getValueAt(row, 3) != null ? new BigInteger((String)DataBaseTable.getValueAt(row, 3)) : null;
 						try 
 						{ 
-							dataFacade.updateBean(telephone);
+							dataFacade.updateTelephone(telephone);
 						} 
 						catch (Exception ex) 
 						{  
@@ -199,7 +199,7 @@ public class ThirdTabPanel extends JPanel
 							BeanTableModel tableModel = (BeanTableModel) DataBaseTable.getModel();
 							List<Telephone> beans = tableModel.getBeans();
 							Telephone telephone = beans.get(beans.size() - 1);
-							dataFacade.createEmptyBean(telephone);
+							dataFacade.saveTelephone(telephone);
 						} 
 						catch (Exception ex) 
 						{  

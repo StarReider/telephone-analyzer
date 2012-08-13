@@ -78,7 +78,7 @@ public class MainFrame
     
     public MainFrame(final DataProvider dataFacade, ConfigurationReader configurationReader) throws Exception
     {
-    	log = LogFactory.getLog(MainFrame.class); 
+    	this.log = LogFactory.getLog(MainFrame.class); 
     	this.dataFacade = dataFacade;
     	
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();

@@ -68,7 +68,7 @@ public class JDBCModule implements DataProvider
 		}  
 	}
 	
-	public void updateBean(Telephone telephone) throws Exception
+	public void updateTelephone(Telephone telephone) throws Exception
 	{
         PreparedStatement ps = conn.prepareStatement("UPDATE " 
         		+ TABLE_NAME 
@@ -90,7 +90,7 @@ public class JDBCModule implements DataProvider
 	}
 	
 	@Override
-	public void createEmptyBean(Telephone telephone) throws Exception
+	public void saveTelephone(Telephone telephone) throws Exception
 	{
 		Statement st = conn.createStatement();
 		st.execute("INSERT INTO telephones(telephone, name, description) VALUES(null, null, null)");   
@@ -119,7 +119,7 @@ public class JDBCModule implements DataProvider
 	}
 
 	@Override
-	public List<Telephone> getAllBeans() throws Exception 
+	public List<Telephone> getAllTelephones() throws Exception 
 	{
 		Statement stmt = conn.createStatement();
         ResultSet res = stmt.executeQuery("SELECT * FROM " + TABLE_NAME);  
@@ -162,6 +162,12 @@ public class JDBCModule implements DataProvider
 
 	@Override
 	public String getOrganization(String orgName) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Telephone getTelephone(String tel) throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}

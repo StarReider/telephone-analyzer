@@ -14,11 +14,13 @@ public interface DataProvider
 	
 	void close() throws Exception;
 	
-	void updateBean(Telephone telephone) throws Exception;
+	void updateTelephone(Telephone telephone) throws Exception;
 	
-	void createEmptyBean(Telephone telephone) throws Exception;
+	void saveTelephone(Telephone telephone) throws Exception;
 	
-	List<Telephone> getAllBeans() throws Exception;
+	List<Telephone> getAllTelephones() throws Exception;
+	
+	Telephone getTelephone(String tel) throws Exception;
 	
 	String[] getAllOrganizations() throws Exception;
 	

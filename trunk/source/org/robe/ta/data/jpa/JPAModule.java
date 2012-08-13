@@ -43,7 +43,16 @@ public class JPAModule implements DataProvider
 	}
 
 	@Override
-	public void updateBean(Telephone telephone) throws Exception 
+	public void updateTelephone(Telephone telephone) throws Exception 
+	{
+		EntityTransaction transaction = em.getTransaction();
+		transaction.begin();
+		em.merge(telephone);
+		transaction.commit();
+	}
+
+	@Override
+	public void saveTelephone(Telephone telephone) throws Exception 
 	{
 		EntityTransaction transaction = em.getTransaction();
 		transaction.begin();
@@ -52,19 +61,9 @@ public class JPAModule implements DataProvider
 	}
 
 	@Override
-	public void createEmptyBean(Telephone telephone) throws Exception 
-	{
-		EntityTransaction transaction = em.getTransaction();
-		transaction.begin();
-		em.persist(telephone);
-		transaction.commit();
-	}
-
-	@Override
-	public List<Telephone> getAllBeans() throws Exception 
+	public List<Telephone> getAllTelephones() throws Exception 
 	{
 		Query query = em.createQuery("SELECT e FROM Telephone e");
-		System.out.println("all telephones quantity are " + query.getResultList().size());
 	    return query.getResultList();
 	}
 
@@ -83,5 +82,13 @@ public class JPAModule implements DataProvider
 		query.setParameter(1, new BigDecimal(tel));
 	    String org = (String) query.getSingleResult();
 		return org;
+	}
+
+	@Override
+	public Telephone getTelephone(String tel) throws Exception 
+	{
+		Query query = em.createQuery("SELECT e FROM Telephone e WHERE e.telephone = ?1");
+		query.setParameter(1, new BigDecimal(tel));
+		return (Telephone) query.getSingleResult();
 	}
 }

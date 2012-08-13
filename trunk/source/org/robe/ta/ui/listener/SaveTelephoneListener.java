@@ -31,16 +31,47 @@ public class SaveTelephoneListener implements ActionListener
 	@Override
 	public void actionPerformed(ActionEvent e) 
 	{
-		Telephone telephone = new Telephone();
-		telephone.setName(orgField.getSelectedItem().toString());
+		String org = orgField.getSelectedItem().toString();
+		
+		if(org == null || org.length() == 0)
+		{
+			log.warn("Organization is empty.");
+			JOptionPane.showMessageDialog(null, "Organization is empty.", "Error", JOptionPane.ERROR_MESSAGE);			
+			return;
+		}
 		
 		String tel = telField.getText().replaceAll("[^\\d]", "");
-		if(tel.length() == 11)
-			tel = tel.substring(1);
-		telephone.setTelephone(new BigInteger(tel));
-		try 
+		
+		if(tel == null || tel.length() == 0)
 		{
-			dataFacade.createEmptyBean(telephone);
+			log.warn("Telephone is empty.");
+			JOptionPane.showMessageDialog(null, "Telephone is empty.", "Error", JOptionPane.ERROR_MESSAGE);			
+			return;
+		}
+
+		try 
+		{		
+		Telephone telephone = dataFacade.getTelephone(tel);
+		if(telephone == null)
+		{
+			telephone = new Telephone();
+			telephone.setName(org);
+
+			if(tel.length() == 11)
+				tel = tel.substring(1);
+			
+			telephone.setTelephone(new BigInteger(tel));
+			
+			dataFacade.saveTelephone(telephone);
+		}
+		else
+		{
+			telephone.setName(org);
+			dataFacade.updateTelephone(telephone);
+		}
+
+			telField.setText("");
+			orgField.setSelectedItem("");
 		} 
 		catch (Exception e1) 
 		{

@@ -3,13 +3,12 @@ package org.robe.ta;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.robe.ta.conf.ConfigurationReader;
-import org.robe.ta.data.DataProvider;
 import org.robe.ta.data.DataFactory;
+import org.robe.ta.data.DataProvider;
 import org.robe.ta.ui.MainFrame;
 
 public class TelephoneAnalyzer 
@@ -26,6 +25,7 @@ public class TelephoneAnalyzer
 		catch (Exception e) 
 		{
 			JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+			log.error(e);
 			throw e;
 		}
 	}
@@ -63,8 +63,8 @@ public class TelephoneAnalyzer
 				} 
 				catch (Exception e) 
 				{
+					log.error(e);
 					JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-					System.exit(-1);
 				}
 			}
 		});

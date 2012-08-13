@@ -81,7 +81,7 @@ public class LinkController extends MouseAdapter implements MouseMotionListener
 			    		
 			    		try 
 			    		{
-							dataFacade.createEmptyBean(telephone);
+							dataFacade.saveTelephone(telephone);
 				    		
 				    		((StyledDocument) textArea.getDocument()).setCharacterAttributes(entry.getValue(), entry.getKey().length(), attrs2, true);
 						} 
