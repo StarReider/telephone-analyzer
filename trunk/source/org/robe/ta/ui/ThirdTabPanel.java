@@ -95,17 +95,17 @@ public class ThirdTabPanel extends JPanel
         
         DoQuery = new javax.swing.JButton();
         DoQuery.setActionCommand("do");
-        final JButton but = new JButton("Add");
-        but.setActionCommand("add");
+        final JButton addButton = new JButton("Add");
+        addButton.setActionCommand("add");
         
         setLayout(new BorderLayout());
         
-        but.addActionListener(new ActionListener() 
+        addButton.addActionListener(new ActionListener() 
         {	
 			@Override
 			public void actionPerformed(ActionEvent e) 
 			{
-				if(e.getSource() == but)
+				if(e.getSource() == addButton)
 				{
 					model.insertRow(new Telephone());
 					//refill table of beans
@@ -141,7 +141,7 @@ public class ThirdTabPanel extends JPanel
         
         add(jScrollPane1);
         
-        DoQuery.setText("Do Query");
+        DoQuery.setText("Show All");
         DoQuery.addActionListener(new java.awt.event.ActionListener() 
         {
             public void actionPerformed(java.awt.event.ActionEvent evt) 
@@ -155,7 +155,7 @@ public class ThirdTabPanel extends JPanel
         panel.add(l1);
         panel.add(filterText);
         panel.add(DoQuery);
-        panel.add(but);
+        panel.add(addButton);
         
         add(panel, BorderLayout.SOUTH);
         

@@ -2,6 +2,8 @@ package org.robe.ta;
 
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -46,8 +48,10 @@ public class TelephoneAnalyzer
     	log.info("Initialize GUI subsystem done");
 	}
 	
-	private void createGUI(final DataProvider dataFacade, final ConfigurationReader configurationReader) 
+	private void createGUI(final DataProvider dataFacade, final ConfigurationReader configurationReader) throws Exception 
 	{
+		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		
 		SwingUtilities.invokeLater(new Runnable() 
 		{
 			@Override
