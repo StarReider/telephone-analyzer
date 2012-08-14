@@ -48,6 +48,9 @@ public class SaveTelephoneListener implements ActionListener
 			JOptionPane.showMessageDialog(null, "Telephone is empty.", "Error", JOptionPane.ERROR_MESSAGE);			
 			return;
 		}
+		
+		if(tel.length() == 11)
+			tel = tel.substring(1);
 
 		try 
 		{		
@@ -56,9 +59,6 @@ public class SaveTelephoneListener implements ActionListener
 		{
 			telephone = new Telephone();
 			telephone.setName(org);
-
-			if(tel.length() == 11)
-				tel = tel.substring(1);
 			
 			telephone.setTelephone(new BigInteger(tel));
 			

@@ -89,6 +89,7 @@ public class JPAModule implements DataProvider
 	{
 		Query query = em.createQuery("SELECT e FROM Telephone e WHERE e.telephone = ?1");
 		query.setParameter(1, new BigDecimal(tel));
-		return (Telephone) query.getSingleResult();
+		List l = query.getResultList();
+		return (Telephone) l.get(0);
 	}
 }
