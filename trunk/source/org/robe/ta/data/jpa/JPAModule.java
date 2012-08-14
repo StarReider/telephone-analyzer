@@ -1,7 +1,6 @@
 package org.robe.ta.data.jpa;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -72,7 +71,8 @@ public class JPAModule implements DataProvider
 	{
 		Query query = em.createQuery("SELECT distinct e.name FROM Telephone e ORDER BY e.name");
 		List<String> orgs = query.getResultList();
-	    return (String[]) query.getResultList().toArray(new String[orgs.size()]);
+		orgs.add("");
+	    return (String[]) orgs.toArray(new String[orgs.size()]);
 	}
 
 	@Override

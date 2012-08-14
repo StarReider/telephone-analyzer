@@ -42,6 +42,7 @@ import org.apache.commons.logging.LogFactory;
 import org.robe.ta.conf.ConfigurationReader;
 import org.robe.ta.data.DataProvider;
 import org.robe.ta.ui.listener.CloseWindowListener;
+import org.robe.ta.ui.listener.LinkListener;
 import org.robe.ta.ui.listener.SaveTelephoneListener;
 import org.robe.ta.ui.listener.SearchListener;
 
@@ -54,13 +55,10 @@ public class MainFrame
 {
     private final Log log; 
     private final DataProvider dataFacade;
-
     private int linkID = 0;
     private Map<String, Integer> attrsArr = new HashMap<>();
-    
     private JBrowserComponent<?> browser;
-    
-    BrowserAdapter ba;
+    private BrowserAdapter ba;
     
     public void addHyperlink(Document document, int start, int end, String group, boolean finded) throws BadLocationException 
     {
@@ -142,9 +140,8 @@ public class MainFrame
 		
 		final JTextField telField = new JTextField();
 		telField.setEditable(false);
-		//JTextField orgField = new JTextField();
 		final JComboBox<String> orgField = new JComboBox<String>(dataFacade.getAllOrganizations());//new JList<String>(dataFacade.getAllOrganizations());
-		
+		orgField.setSelectedItem("");
 		fieldsPanel.setLayout(new BoxLayout(fieldsPanel, BoxLayout.PAGE_AXIS));
 		JPanel tt = new JPanel();tt.setLayout(new BoxLayout(tt, BoxLayout.LINE_AXIS));
 		tt.add(new JLabel("Telephone:")); tt.add(telField).setPreferredSize(new Dimension(10, 5));
@@ -184,45 +181,7 @@ public class MainFrame
 		panel.add(browser.getComponent(), BorderLayout.CENTER);
 		panel.add(generalPanel, BorderLayout.NORTH);
 		
-		browser.addBrowserListener(new BrowserAdapter() 
-		{	
-			@Override
-			public boolean beforeOpen(String uri) 
-			{
-				try 
-				{
-					uri = URLDecoder.decode(uri, "UTF-8");
-				} 
-				catch (UnsupportedEncodingException e) 
-				{
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				
-				if (uri.startsWith("call:add_tel")) 
-				{
-					telField.setText(uri.replaceFirst("call:add_tel", ""));
-                    return false;
-				}
-				else if(uri.startsWith("call:show_org"))
-				{
-					String[] ent = uri.replaceFirst("call:show_org", "").split(";");
-					if(ent.length != 2)
-						return false;
-					String org = ent[1];
-					String tel = ent[0];
-					telField.setText(tel);
-					
-					log.info("Organization = " + org);
-					
-					orgField.setSelectedItem(org);
-					
-                    return false;
-				}
-
-				return super.beforeOpen(uri);
-			}
-		});
+		browser.addBrowserListener(new LinkListener(telField, orgField));
 		
 		return panel;
 	}

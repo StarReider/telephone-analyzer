@@ -54,21 +54,21 @@ public class SaveTelephoneListener implements ActionListener
 
 		try 
 		{		
-		Telephone telephone = dataFacade.getTelephone(tel);
-		if(telephone == null)
-		{
-			telephone = new Telephone();
-			telephone.setName(org);
+			Telephone telephone = dataFacade.getTelephone(tel);
+			if(telephone == null)
+			{
+				telephone = new Telephone();
+				telephone.setName(org);
 			
-			telephone.setTelephone(new BigInteger(tel));
+				telephone.setTelephone(new BigInteger(tel));
 			
-			dataFacade.saveTelephone(telephone);
-		}
-		else
-		{
-			telephone.setName(org);
-			dataFacade.updateTelephone(telephone);
-		}
+				dataFacade.saveTelephone(telephone);
+			}
+			else
+			{
+				telephone.setName(org);
+				dataFacade.updateTelephone(telephone);
+			}
 
 			telField.setText("");
 			orgField.setSelectedItem("");

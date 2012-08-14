@@ -13,7 +13,6 @@ import org.apache.commons.logging.LogFactory;
 import org.mozilla.browser.MozillaExecutor;
 import org.mozilla.interfaces.nsIDOMDocument;
 import org.mozilla.interfaces.nsIDOMElement;
-import org.mozilla.interfaces.nsIDOMNamedNodeMap;
 import org.mozilla.interfaces.nsIDOMNode;
 import org.mozilla.interfaces.nsIDOMNodeList;
 import org.robe.ta.data.DataProvider;
@@ -193,8 +192,7 @@ public class SearchListener extends BrowserAdapter
 	public void onLoadingEnded() 
 	{
 		 MozillaExecutor.mozAsyncExec(new Runnable() 
-		 {
-			 
+		 {			 
              @Override
              public void run() 
              {

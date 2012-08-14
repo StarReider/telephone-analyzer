@@ -6,6 +6,8 @@ package org.robe.ta.ui.listener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
+import javax.swing.JOptionPane;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.robe.ta.data.DataProvider;
@@ -39,6 +41,7 @@ public class CloseWindowListener extends WindowAdapter
 		catch (Exception exp) 
 		{
 			log.error(exp);
+			JOptionPane.showMessageDialog(null, exp.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 			System.exit(-1);
 		}
 		System.exit(0);
