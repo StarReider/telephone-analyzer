@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration>
+  <db>
+	<path>E:/TelephoneAnalyzer-1.0.10/exampledb</path>
+	<server></server>
+	<port></port>
+  </db>
+  <ui>
+  	<third_tab>true</third_tab>
+  </ui>
+</configuration>
