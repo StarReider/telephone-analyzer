@@ -54,7 +54,7 @@ public class MainFrame
     private final Log log; 
     private final DataProvider dataFacade;
     private int linkID = 0;
-    private Map<String, Integer> attrsArr = new HashMap<>();
+    private Map<String, Integer> attrsArr = new HashMap<String, Integer>();
     private JBrowserComponent<?> browser;
     private BrowserAdapter ba;
     
