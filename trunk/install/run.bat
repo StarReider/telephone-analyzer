@@ -1,1 +1,0 @@
-"C:/Program Files (x86)/Java/jdk1.7.0_51/bin/java.exe" -cp  ".;./bin;./lib/*;C:/Program Files/Java/jdk1.7.0_25/db/lib/*;" org.robe.ta.TelephoneAnalyzer 1>>logs/console.log 2>&1
