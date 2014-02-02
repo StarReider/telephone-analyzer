@@ -7,7 +7,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<exeFileName>Telephone Analyzer</exeFileName>
+		<exeFileName>TelephoneAnalyzer</exeFileName>
 		<product.title>ROBE</product.title>
 		<product.company>ROBE</product.company>
 		<jdkVersion>1.7</jdkVersion>
@@ -149,10 +149,12 @@
 							<classPath>
 								<mainClass>org.robe.ta.TelephoneAnalyzer</mainClass>
 								<addDependencies>true</addDependencies>
-								<preCp>anything</preCp>
 							</classPath>
 							<jre>
 								<minVersion>${jdkVersion}.0</minVersion>
+								    <opts>
+        							<opt>-cp %JAVA_HOME%/db/lib*.jar</opt>
+    								</opts>
 							</jre>
 							<versionInfo>
 								<fileVersion>${project.version}.0</fileVersion>
